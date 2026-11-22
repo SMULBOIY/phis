@@ -140,7 +140,7 @@ from services.http_security import (
 )
 from services.model_metadata import ModelMetadataError, ModelRegistry
 
-__all__ = ["create_app"]
+__all__ = ["create_app", "app"]
 
 
 def _validate_runtime_config(app: Flask) -> None:
@@ -325,3 +325,7 @@ def create_app(
         registry.metadata.model_version, app.config["BUILD_STAGE"],
     )
     return app
+
+
+# Vercel and WSGI platforms can discover this module-level Flask application.
+app = create_app()
