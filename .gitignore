@@ -24,8 +24,8 @@ instance/*.sqlite3
 *.db
 *.log
 
-# --- Model artefacts: binary bundle is reproducible from training; metrics are committed ---
-ml/saved_model/*.joblib
+# --- Model artefacts: keep the deployed bundle, ignore unselected candidate bundles ---
+ml/saved_model/candidates/*.joblib
 
 # --- Raw datasets: often large and licence-restricted; provenance is in docs/DATASET.md ---
 dataset/raw/*.csv
