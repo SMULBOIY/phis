@@ -1,0 +1,517 @@
+{
+  "stage": 6,
+  "generated_at_utc": "2026-11-06T12:48:02+00:00",
+  "description": "ALL values measured by sklearn.metrics on the named splits. No hard-coded performance figures.",
+  "config": {
+    "validation_path": "/home/user/phishing-detection-system/dataset/processed/validation.csv",
+    "test_path": "/home/user/phishing-detection-system/dataset/processed/test.csv",
+    "candidates_dir": "/home/user/phishing-detection-system/ml/saved_model/candidates",
+    "output_dir": "/home/user/phishing-detection-system/ml/saved_model",
+    "docs_dir": "/home/user/phishing-detection-system/docs",
+    "seed": 42,
+    "recall_min": 0.9,
+    "max_abstention_rate": 0.25,
+    "min_band_gap": 0.1,
+    "grid_step": 0.05,
+    "importance_rows": 5000,
+    "importance_repeats": 3
+  },
+  "dataset": {
+    "train": {
+      "file": "/home/user/phishing-detection-system/dataset/processed/train.csv",
+      "sha256": "bdb7ba6bb2a8118c04cd8bf6b06a3b733a8d7e58003b29159c6c8cecad9d0734",
+      "rows": 164744,
+      "legitimate": 93690,
+      "phishing": 71054,
+      "phishing_rate": 0.431299
+    },
+    "validation": {
+      "file": "/home/user/phishing-detection-system/dataset/processed/validation.csv",
+      "sha256": "6e6c913a0690245214732c51cb193bea9f7ec67c2968d797393a0dc25403f39f",
+      "rows": 35302,
+      "legitimate": 20580,
+      "phishing": 14722,
+      "phishing_rate": 0.41703
+    },
+    "test": {
+      "file": "/home/user/phishing-detection-system/dataset/processed/test.csv",
+      "sha256": "c06d5392c03d30fc40bff6b75efb8898f1b9aa1924122c1acc43f3d8f7a4bf28",
+      "rows": 35302,
+      "legitimate": 20580,
+      "phishing": 14722,
+      "phishing_rate": 0.41703
+    }
+  },
+  "per_model": {
+    "logistic_regression": {
+      "validation": {
+        "decision_boundary": 0.5,
+        "accuracy": 0.983712,
+        "precision": 0.992618,
+        "recall": 0.968143,
+        "f1": 0.980228,
+        "roc_auc": 0.997818,
+        "confusion_matrix": [
+          [
+            20474,
+            106
+          ],
+          [
+            469,
+            14253
+          ]
+        ],
+        "tn": 20474,
+        "fp": 106,
+        "fn": 469,
+        "tp": 14253,
+        "score_min": 0.004019,
+        "score_max": 1.0,
+        "score_mean": 0.42784
+      },
+      "calibration": {
+        "t_low": 0.05,
+        "t_high": 0.95,
+        "decisive_count": 28312,
+        "abstained_count": 6990,
+        "abstention_rate": 0.198006,
+        "tp": 13205,
+        "fp": 4,
+        "tn": 15063,
+        "fn": 40,
+        "precision": 0.999697,
+        "recall": 0.99698,
+        "f1": 0.998337,
+        "accuracy": 0.998446,
+        "false_negative_rate": 0.00302,
+        "confusion_matrix": [
+          [
+            15063,
+            4
+          ],
+          [
+            40,
+            13205
+          ]
+        ],
+        "state_counts": {
+          "LEGITIMATE": 15103,
+          "SUSPICIOUS": 6990,
+          "PHISHING": 13209
+        }
+      },
+      "feasible": true,
+      "t_low": 0.05,
+      "t_high": 0.95,
+      "total_pairs": 81,
+      "feasible_pairs": 81,
+      "criterion": "Validation-split grid search over (T_low, T_high). Feasible: recall >= 0.90 on decisive predictions, abstention rate <= 0.25, band gap >= 0.10. Objective: maximise F1 on decisive predictions; tie-break by fewest false negatives, then lowest abstention rate, then threshold values. Model selection uses the same objective across candidates, tie-broken by highest validation ROC-AUC.",
+      "constraints": {
+        "recall_min": 0.9,
+        "max_abstention_rate": 0.25,
+        "min_band_gap": 0.1,
+        "grid_step": 0.05
+      }
+    },
+    "decision_tree": {
+      "validation": {
+        "decision_boundary": 0.5,
+        "accuracy": 0.99323,
+        "precision": 0.993727,
+        "recall": 0.990015,
+        "f1": 0.991868,
+        "roc_auc": 0.997769,
+        "confusion_matrix": [
+          [
+            20488,
+            92
+          ],
+          [
+            147,
+            14575
+          ]
+        ],
+        "tn": 20488,
+        "fp": 92,
+        "fn": 147,
+        "tp": 14575,
+        "score_min": 0.0,
+        "score_max": 1.0,
+        "score_mean": 0.428554
+      },
+      "calibration": {
+        "t_low": 0.05,
+        "t_high": 0.95,
+        "decisive_count": 32600,
+        "abstained_count": 2702,
+        "abstention_rate": 0.07654,
+        "tp": 14499,
+        "fp": 12,
+        "tn": 18022,
+        "fn": 67,
+        "precision": 0.999173,
+        "recall": 0.9954,
+        "f1": 0.997283,
+        "accuracy": 0.997577,
+        "false_negative_rate": 0.0046,
+        "confusion_matrix": [
+          [
+            18022,
+            12
+          ],
+          [
+            67,
+            14499
+          ]
+        ],
+        "state_counts": {
+          "LEGITIMATE": 18089,
+          "SUSPICIOUS": 2702,
+          "PHISHING": 14511
+        }
+      },
+      "feasible": true,
+      "t_low": 0.05,
+      "t_high": 0.95,
+      "total_pairs": 81,
+      "feasible_pairs": 81,
+      "criterion": "Validation-split grid search over (T_low, T_high). Feasible: recall >= 0.90 on decisive predictions, abstention rate <= 0.25, band gap >= 0.10. Objective: maximise F1 on decisive predictions; tie-break by fewest false negatives, then lowest abstention rate, then threshold values. Model selection uses the same objective across candidates, tie-broken by highest validation ROC-AUC.",
+      "constraints": {
+        "recall_min": 0.9,
+        "max_abstention_rate": 0.25,
+        "min_band_gap": 0.1,
+        "grid_step": 0.05
+      }
+    },
+    "random_forest": {
+      "validation": {
+        "decision_boundary": 0.5,
+        "accuracy": 0.986715,
+        "precision": 0.98417,
+        "recall": 0.98397,
+        "f1": 0.98407,
+        "roc_auc": 0.997644,
+        "confusion_matrix": [
+          [
+            20347,
+            233
+          ],
+          [
+            236,
+            14486
+          ]
+        ],
+        "tn": 20347,
+        "fp": 233,
+        "fn": 236,
+        "tp": 14486,
+        "score_min": 0.022595,
+        "score_max": 1.0,
+        "score_mean": 0.415385
+      },
+      "calibration": {
+        "t_low": 0.1,
+        "t_high": 0.8,
+        "decisive_count": 32189,
+        "abstained_count": 3113,
+        "abstention_rate": 0.088182,
+        "tp": 14218,
+        "fp": 24,
+        "tn": 17882,
+        "fn": 65,
+        "precision": 0.998315,
+        "recall": 0.995449,
+        "f1": 0.99688,
+        "accuracy": 0.997235,
+        "false_negative_rate": 0.004551,
+        "confusion_matrix": [
+          [
+            17882,
+            24
+          ],
+          [
+            65,
+            14218
+          ]
+        ],
+        "state_counts": {
+          "LEGITIMATE": 17947,
+          "SUSPICIOUS": 3113,
+          "PHISHING": 14242
+        }
+      },
+      "feasible": true,
+      "t_low": 0.1,
+      "t_high": 0.8,
+      "total_pairs": 81,
+      "feasible_pairs": 60,
+      "criterion": "Validation-split grid search over (T_low, T_high). Feasible: recall >= 0.90 on decisive predictions, abstention rate <= 0.25, band gap >= 0.10. Objective: maximise F1 on decisive predictions; tie-break by fewest false negatives, then lowest abstention rate, then threshold values. Model selection uses the same objective across candidates, tie-broken by highest validation ROC-AUC.",
+      "constraints": {
+        "recall_min": 0.9,
+        "max_abstention_rate": 0.25,
+        "min_band_gap": 0.1,
+        "grid_step": 0.05
+      }
+    }
+  },
+  "selection": {
+    "criterion": "Validation-split grid search over (T_low, T_high). Feasible: recall >= 0.90 on decisive predictions, abstention rate <= 0.25, band gap >= 0.10. Objective: maximise F1 on decisive predictions; tie-break by fewest false negatives, then lowest abstention rate, then threshold values. Model selection uses the same objective across candidates, tie-broken by highest validation ROC-AUC.",
+    "selected_model": "logistic_regression",
+    "eligible_models": [
+      "logistic_regression",
+      "decision_tree",
+      "random_forest"
+    ],
+    "ranking": [
+      {
+        "model": "logistic_regression",
+        "calibrated_f1": 0.998337,
+        "calibrated_recall": 0.99698,
+        "false_negatives": 40,
+        "abstention_rate": 0.198006,
+        "validation_roc_auc": 0.997818
+      },
+      {
+        "model": "decision_tree",
+        "calibrated_f1": 0.997283,
+        "calibrated_recall": 0.9954,
+        "false_negatives": 67,
+        "abstention_rate": 0.07654,
+        "validation_roc_auc": 0.997769
+      },
+      {
+        "model": "random_forest",
+        "calibrated_f1": 0.99688,
+        "calibrated_recall": 0.995449,
+        "false_negatives": 65,
+        "abstention_rate": 0.088182,
+        "validation_roc_auc": 0.997644
+      }
+    ]
+  },
+  "validation": {
+    "standard_0.5": {
+      "decision_boundary": 0.5,
+      "accuracy": 0.983712,
+      "precision": 0.992618,
+      "recall": 0.968143,
+      "f1": 0.980228,
+      "roc_auc": 0.997818,
+      "confusion_matrix": [
+        [
+          20474,
+          106
+        ],
+        [
+          469,
+          14253
+        ]
+      ],
+      "tn": 20474,
+      "fp": 106,
+      "fn": 469,
+      "tp": 14253,
+      "score_min": 0.004019,
+      "score_max": 1.0,
+      "score_mean": 0.42784
+    },
+    "calibrated": {
+      "t_low": 0.05,
+      "t_high": 0.95,
+      "decisive_count": 28312,
+      "abstained_count": 6990,
+      "abstention_rate": 0.198006,
+      "tp": 13205,
+      "fp": 4,
+      "tn": 15063,
+      "fn": 40,
+      "precision": 0.999697,
+      "recall": 0.99698,
+      "f1": 0.998337,
+      "accuracy": 0.998446,
+      "false_negative_rate": 0.00302,
+      "confusion_matrix": [
+        [
+          15063,
+          4
+        ],
+        [
+          40,
+          13205
+        ]
+      ],
+      "state_counts": {
+        "LEGITIMATE": 15103,
+        "SUSPICIOUS": 6990,
+        "PHISHING": 13209
+      }
+    }
+  },
+  "test": {
+    "standard_0.5": {
+      "decision_boundary": 0.5,
+      "accuracy": 0.983854,
+      "precision": 0.993307,
+      "recall": 0.967803,
+      "f1": 0.980389,
+      "roc_auc": 0.998055,
+      "confusion_matrix": [
+        [
+          20484,
+          96
+        ],
+        [
+          474,
+          14248
+        ]
+      ],
+      "tn": 20484,
+      "fp": 96,
+      "fn": 474,
+      "tp": 14248,
+      "score_min": 0.004019,
+      "score_max": 1.0,
+      "score_mean": 0.427475
+    },
+    "calibrated": {
+      "t_low": 0.05,
+      "t_high": 0.95,
+      "decisive_count": 28217,
+      "abstained_count": 7085,
+      "abstention_rate": 0.200697,
+      "tp": 13197,
+      "fp": 2,
+      "tn": 14988,
+      "fn": 30,
+      "precision": 0.999848,
+      "recall": 0.997732,
+      "f1": 0.998789,
+      "accuracy": 0.998866,
+      "false_negative_rate": 0.002268,
+      "confusion_matrix": [
+        [
+          14988,
+          2
+        ],
+        [
+          30,
+          13197
+        ]
+      ],
+      "state_counts": {
+        "LEGITIMATE": 15018,
+        "SUSPICIOUS": 7085,
+        "PHISHING": 13199
+      }
+    },
+    "state_counts": {
+      "LEGITIMATE": 15018,
+      "SUSPICIOUS": 7085,
+      "PHISHING": 13199
+    },
+    "scored_once": true
+  },
+  "feature_importance": {
+    "method": "sklearn.inspection.permutation_importance(scoring='roc_auc')",
+    "rows": 5000,
+    "repeats": 3,
+    "random_state": 42,
+    "features": {
+      "url_length": {
+        "mean": 0.327594,
+        "std": 0.00087
+      },
+      "domain_length": {
+        "mean": 0.28558,
+        "std": 0.00319
+      },
+      "num_dots": {
+        "mean": 0.000715,
+        "std": 0.000183
+      },
+      "num_hyphens": {
+        "mean": 9.9e-05,
+        "std": 6.6e-05
+      },
+      "num_special_chars": {
+        "mean": -1e-06,
+        "std": 7e-06
+      },
+      "num_digits": {
+        "mean": 0.010226,
+        "std": 0.000615
+      },
+      "has_ip_address": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "has_at_symbol": {
+        "mean": 0.000221,
+        "std": 3.6e-05
+      },
+      "has_suspicious_pattern": {
+        "mean": 0.000317,
+        "std": 7.2e-05
+      },
+      "num_subdomains": {
+        "mean": 0.000303,
+        "std": 6.4e-05
+      },
+      "has_https": {
+        "mean": 0.584041,
+        "std": 0.004683
+      },
+      "is_shortened": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "num_suspicious_words": {
+        "mean": 0.000117,
+        "std": 1.3e-05
+      },
+      "has_unusual_port": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "has_encoded_chars": {
+        "mean": 3.3e-05,
+        "std": 3.1e-05
+      }
+    }
+  },
+  "bias_analysis": {
+    "top_features": [
+      {
+        "feature": "has_https",
+        "mean_roc_auc_decrease": 0.584041,
+        "std": 0.004683
+      },
+      {
+        "feature": "url_length",
+        "mean_roc_auc_decrease": 0.327594,
+        "std": 0.00087
+      },
+      {
+        "feature": "domain_length",
+        "mean_roc_auc_decrease": 0.28558,
+        "std": 0.00319
+      }
+    ],
+    "has_https_mean_roc_auc_decrease": 0.584041,
+    "next_largest_mean_roc_auc_decrease": 0.327594,
+    "https_is_largest_feature": true,
+    "interpretation": "The HTTPS dataset shortcut identified in Stage 4 is confirmed by measurement. Performance figures describe this dataset's distribution, not the live web."
+  },
+  "environment": {
+    "python": "3.13.16",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "sklearn": "1.6.1",
+    "joblib": "1.5.3"
+  },
+  "honesty": {
+    "metrics_source": "sklearn.metrics on validation.csv and test.csv",
+    "hardcoded_values": false,
+    "test_split_read_before_selection": false
+  }
+}

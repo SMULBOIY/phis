@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Scan report #{{ result.scan_id }} &middot; {{ app_name }}{% endblock %}
+{% block content %}
+
+<section class="pds-hero pds-hero-compact" aria-labelledby="reportHeading">
+  <p class="pds-eyebrow">STAGE {{ build_stage }} OF 14 &middot; AUDITED SCAN REPORT</p>
+  <h1 id="reportHeading">Scan <span>report</span> #{{ result.scan_id }}.</h1>
+  <p class="pds-lead">
+    This report is rebuilt from the saved <code>scan_history</code> row and the
+    measured model artefacts. Inference is <strong>not</strong> re-run, no
+    second record is created, and the submitted URL is never fetched.
+  </p>
+  <div class="pds-actions">
+    <button class="pds-btn" type="button" data-print>Print or save as PDF</button>
+    <a class="pds-btn pds-btn-ghost" href="{{ url_for('scanning.scan_form') }}">New scan</a>
+    <a class="pds-btn pds-btn-ghost" href="{{ url_for('core.index') }}">Overview</a>
+  </div>
+</section>
+
+<article class="pds-card pds-report-meta">
+  <p class="pds-card-label">Report provenance</p>
+  <p>
+    Report generated {{ generated_at_utc }} from scan #{{ result.scan_id }},
+    stored at {{ result.scan_date.strftime('%Y-%m-%d %H:%M:%S UTC') }}.
+    Model {{ result.model_name }} v{{ result.model_version }}.
+    {% if result.user_id %}Linked account id {{ result.user_id }}.{% else %}Guest scan (no linked account).{% endif %}
+    Audit record persisted: {{ 'yes' if result.persisted else 'no' }}.
+  </p>
+</article>
+
+{% include "partials/scan_result.html" %}
+
+<section class="pds-section" aria-labelledby="reportFooterHeading">
+  <div class="pds-banner">
+    <span class="pds-pill pds-pill-ok">ACADEMIC USE</span>
+    <div>
+      <strong id="reportFooterHeading">Static URL-only analysis.</strong>
+      <p>
+        The classification is a machine-learning estimate over 15 lexical URL
+        characteristics, not a guarantee that a website is malicious or safe.
+        HTTPS alone does not mean a website is legitimate. Cite the dataset
+        source, the measured evaluation artefacts and the documented
+        limitations when reproducing this result.
+      </p>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,5 @@
+split,total,legitimate,phishing,legitimate_pct,phishing_pct
+all_clean,235348,134850,100498,57.298,42.702
+train,164744,93690,71054,56.87,43.13
+validation,35302,20580,14722,58.297,41.703
+test,35302,20580,14722,58.297,41.703

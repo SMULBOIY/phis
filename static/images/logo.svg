@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="logoTitle logoDesc">
+  <title id="logoTitle">Phishing Detection System shield</title>
+  <desc id="logoDesc">A shield containing a link glyph, representing static URL analysis.</desc>
+  <defs>
+    <linearGradient id="shieldFill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#123044"/>
+      <stop offset="1" stop-color="#0a1420"/>
+    </linearGradient>
+  </defs>
+  <path d="M32 3 L57 12 V30 C57 45 46 55 32 61 C18 55 7 45 7 30 V12 Z"
+        fill="url(#shieldFill)" stroke="#22d3ee" stroke-width="2.4" stroke-linejoin="round"/>
+  <path d="M32 9 L51 16 V30 C51 42 43 50 32 55 C21 50 13 42 13 30 V16 Z"
+        fill="none" stroke="#1d7f96" stroke-width="1" opacity="0.55"/>
+  <g fill="none" stroke="#22d3ee" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M27 36.5 L24.5 39 A5 5 0 0 1 17.5 32 L20.5 29"/>
+    <path d="M37 27.5 L39.5 25 A5 5 0 0 1 46.5 32 L43.5 35"/>
+    <path d="M27.5 36.5 L36.5 27.5"/>
+  </g>
+  <circle cx="32" cy="32" r="1.9" fill="#34d399"/>
+  <path d="M20 45 H44" stroke="#34d399" stroke-width="2" stroke-linecap="round" opacity="0.75"/>
+</svg>

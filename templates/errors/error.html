@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ status_code }} {{ code }} &middot; {{ app_name }}{% endblock %}
+{% block content %}
+
+<div class="pds-centered">
+  <section class="pds-message-card" role="alert" aria-labelledby="errorHeading">
+    <p class="pds-eyebrow">SECURE ERROR RESPONSE</p>
+    <p class="pds-status-number" aria-hidden="true">{{ status_code }}</p>
+    <h1 id="errorHeading">Request could not be completed</h1>
+    <p class="pds-code">{{ code }}</p>
+    <p>{{ message }}</p>
+    <p class="pds-card-note">
+      No diagnostic detail is shown to the client. The technical record is kept
+      in the server log only. If you expected content here, check the address
+      and try again.
+    </p>
+    {% if status_code == 429 %}
+      <p class="pds-card-note">
+        A per-route request limit was reached. Wait for the interval named in
+        the Retry-After response header, then resubmit. Limits are configured
+        with RATE_LIMIT_SCAN, RATE_LIMIT_AUTH and RATE_LIMIT_API.
+      </p>
+    {% endif %}
+    <div class="pds-message-actions">
+      <a class="pds-btn" href="{{ url_for('core.index') }}">Return to overview</a>
+      {% if status_code == 401 %}
+        <a class="pds-btn pds-btn-ghost" href="{{ url_for('auth.login') }}">Sign in</a>
+      {% endif %}
+      <a class="pds-btn pds-btn-ghost" href="{{ url_for('core.health') }}">Check system health</a>
+    </div>
+  </section>
+</div>
+
+{% endblock %}

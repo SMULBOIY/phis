@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+{% block title %}Overview &middot; {{ app_name }}{% endblock %}
+{% block content %}
+
+<section class="pds-hero">
+  <p class="pds-eyebrow">STAGE {{ build_stage }} OF 14 &middot; URL-ONLY MACHINE LEARNING</p>
+  <h1>Intelligent <span>phishing website</span> detection.</h1>
+  <p class="pds-lead">
+    {{ app_name }} analyses the <strong>text of a URL</strong> with a trained
+    scikit-learn classifier and reports LEGITIMATE, SUSPICIOUS or PHISHING —
+    with an explicit uncertainty band, explained indicators and a full audit
+    trail. The backend never visits, resolves or executes the submitted URL.
+  </p>
+  <div class="pds-actions">
+    <a class="pds-btn" href="{{ url_for('scanning.scan_form') }}">Launch URL scanner</a>
+    <a class="pds-btn pds-btn-ghost" href="{{ url_for('core.health') }}">View system health</a>
+    <a class="pds-btn pds-btn-ghost" href="{{ url_for('auth.session_state') }}">Inspect session</a>
+  </div>
+</section>
+
+<div class="pds-banner" role="note">
+  <span class="pds-pill">HONEST STATUS</span>
+  <div>
+    <strong>URL scanning is live, with explicit limits.</strong>
+    <p>
+      Stage 10 wired the real estimator: the scanner validates and normalises
+      one URL, extracts the same 15 features used in training, scores it with
+      the hash-verified model, applies the measured abstention band, explains
+      the observations and saves an audit record before showing a result. The
+      backend never visits the address, and a score is never presented as a
+      guaranteed probability of maliciousness. History, dashboards and CSV
+      export are still scheduled for Stage 11.
+    </p>
+  </div>
+</div>
+
+<section class="pds-section" aria-labelledby="telemetryHeading">
+  <div class="pds-section-head">
+    <h2 id="telemetryHeading">System telemetry</h2>
+    <p>Read at request time from configuration, the model artefacts and SQLite — never typed into the page.</p>
+  </div>
+  <div class="row g-3">
+    <div class="col-12 col-sm-6 col-lg-3">
+      <article class="pds-card">
+        <p class="pds-card-label">Application</p>
+        <p class="pds-card-value">{{ environment }}</p>
+        <p class="pds-card-note">v{{ app_version }} &middot; debug={{ debug }} &middot; STAGE {{ build_stage }}</p>
+      </article>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+      <article class="pds-card">
+        <p class="pds-card-label">Selected model</p>
+        <p class="pds-card-value pds-mono">{{ info.model_name }}</p>
+        <p class="pds-card-note">v{{ info.model_version }} &middot; schema {{ info.schema_version }}</p>
+      </article>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+      <article class="pds-card">
+        <p class="pds-card-label">Decision band</p>
+        <p class="pds-card-value pds-mono">{{ info.decision_thresholds.low }} / {{ info.decision_thresholds.high }}</p>
+        <p class="pds-card-note">low / high, calibrated on the validation split</p>
+      </article>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+      <article class="pds-card">
+        <p class="pds-card-label">Artefact integrity</p>
+        <p class="pds-card-value {{ 'pds-value-ok' if bundle.available else 'pds-value-danger' }}">
+          {{ 'VERIFIED' if bundle.available else 'DEGRADED' }}</p>
+        <p class="pds-card-note">{{ bundle.detail }}</p>
+      </article>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+      <article class="pds-card">
+        <p class="pds-card-label">Database</p>
+        <p class="pds-card-value {{ 'pds-value-ok' if db_status.status == 'ready' else 'pds-value-warn' }}">
+          {{ db_status.status|upper }}</p>
+        <p class="pds-card-note">{{ db_status.tables|length }} tables &middot;
+          {{ db_status.counts.get('users', 0) }} users &middot;
+          {{ db_status.counts.get('scans', 0) }} scans</p>
+      </article>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+      <article class="pds-card">
+        <p class="pds-card-label">Detection engine</p>
+        <p class="pds-card-value {{ 'pds-value-ok' if detection.status == 'ready' else 'pds-value-warn' }}">
+          {{ detection.status|upper }}</p>
+        <p class="pds-card-note">{{ detection.engine }} &middot;
+          {{ detection.feature_count }} features &middot; band {{ detection.uncertainty_band }}</p>
+      </article>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+      <article class="pds-card">
+        <p class="pds-card-label">Interface</p>
+        <p class="pds-card-value pds-value-ok">STAGE {{ build_stage }} LIVE</p>
+        <p class="pds-card-note">Bootstrap 5, Chart.js, dark and light themes</p>
+      </article>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+      <article class="pds-card">
+        <p class="pds-card-label">Security edge</p>
+        <p class="pds-card-value pds-value-ok">WIRED</p>
+        <p class="pds-card-note">CSRF, strict CSP, signed sessions, scrypt hashes, per-route request limits</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="pds-section" aria-labelledby="flowHeading">
+  <div class="pds-section-head">
+    <h2 id="flowHeading">How the detection pipeline works</h2>
+    <p>The same 15-feature extractor is used offline for training and at request time.</p>
+  </div>
+  <div class="row g-3">
+    <div class="col-12 col-lg-6">
+      <div class="pds-steps">
+        <article class="pds-step">
+          <span class="pds-step-num">01</span>
+          <div><h3>One bounded URL string</h3>
+            <p>Input is validated, normalised and capped in length. No DNS lookup, socket or HTTP client is involved.</p></div>
+        </article>
+        <article class="pds-step">
+          <span class="pds-step-num">02</span>
+          <div><h3>Fifteen lexical characteristics</h3>
+            <p>Length, dots, hyphens, digits, subdomains, HTTPS, IP literal, suspicious words, encoding and more.</p></div>
+        </article>
+        <article class="pds-step">
+          <span class="pds-step-num">03</span>
+          <div><h3>A measured model score</h3>
+            <p>A persisted estimator emits an uncalibrated score. It is an estimate, not a guarantee that a site is malicious.</p></div>
+        </article>
+        <article class="pds-step">
+          <span class="pds-step-num">04</span>
+          <div><h3>Three honest decision states</h3>
+            <p>Two calibrated cut-offs create an abstention band for unresolved cases, with warnings and a recommended action.</p></div>
+        </article>
+      </div>
+    </div>
+    <div class="col-12 col-lg-6">
+      <article class="pds-card">
+        <p class="pds-card-label">Feature vocabulary &middot; {{ feature_order|length }} fields</p>
+        <ul class="pds-feature-list" id="featureVocabulary">
+          {% for name in feature_order %}<li>{{ name }}</li>{% endfor %}
+        </ul>
+        <p class="pds-card-note">
+          <strong>HTTPS alone does not mean a website is legitimate.</strong>
+          The measured feature analysis found a strong HTTPS shortcut in the
+          training distribution, which is disclosed in the model card rather
+          than hidden. A single flagged characteristic never proves malicious
+          intent.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="pds-section" aria-labelledby="statesHeading">
+  <div class="pds-section-head">
+    <h2 id="statesHeading">Decision states and their exact wording</h2>
+    <p>Strings, colours and risk labels come from the single contract in <code>ml/thresholds.py</code>.</p>
+  </div>
+  <div class="row g-3">
+    {% for state in states %}
+    <div class="col-12 col-md-4">
+      <article class="pds-card pds-state-card {{ state.css }}">
+        <p class="pds-card-label">{{ state.risk_level }} &middot; {{ state.colour }}</p>
+        <h3>{{ state.name }}</h3>
+        <p class="pds-state-message">{{ state.message }}</p>
+        <p class="pds-state-warning">{{ state.warning }}</p>
+      </article>
+    </div>
+    {% endfor %}
+  </div>
+  <p class="pds-card-note pds-note-block">
+    SUSPICIOUS is an abstention band over a two-class estimator, not a third
+    trained class and not a 50/50 verdict. The score is clearly labelled as an
+    uncalibrated model estimate; measured evaluation results are published
+    only in the generated evaluation documents and will be read by the
+    Stage 11 dashboard at runtime.
+  </p>
+</section>
+
+<section class="pds-section" aria-labelledby="dataHeading">
+  <div class="pds-section-head">
+    <h2 id="dataHeading">Dataset provenance</h2>
+    <p>A real Chart.js doughnut built from inline data supplied by the server — no hard-coded figure.</p>
+  </div>
+  <div class="row g-3 align-items-stretch">
+    <div class="col-12 col-lg-7">
+      <article class="pds-card">
+        <p class="pds-card-label">Leakage-free 70 / 15 / 15 split</p>
+        <div class="pds-chart-box" data-chart-type="doughnut"
+             data-chart='{{ split_chart|tojson }}'
+             role="img" aria-label="Doughnut chart of the three dataset split row counts">
+          <canvas id="splitChart" data-chart-target="split"></canvas>
+          <p class="pds-chart-note" data-chart-fallback>
+            Chart.js renders the split sizes here; the values are listed alongside.
+          </p>
+        </div>
+        <p class="pds-card-note">
+          Source: <code>{{ split_chart.source }}</code>. These are dataset row
+          counts, not model results. Loaded at runtime from the Stage 6 artefact.
+        </p>
+      </article>
+    </div>
+    <div class="col-12 col-lg-5">
+      <article class="pds-card">
+        <p class="pds-card-label">Real, cited source</p>
+        <p class="pds-card-value">PhiUSIIL &middot; UCI dataset 967</p>
+        <p class="pds-card-note pds-mono" id="splitNumbers">
+          {% for row in split_rows %}
+            {{ row.label }}: {{ row.value }} rows<br>
+          {% endfor %}
+        </p>
+        <p class="pds-card-note">
+          Prasad &amp; Chandra (2023), Computers &amp; Security, 103545.
+          CC BY 4.0. Group-aware splitting keeps near-identical URLs out of
+          different partitions. Full provenance is in the dataset documentation.
+        </p>
+        <noscript>
+          <p class="pds-card-note">JavaScript is disabled; the row counts above are the source data for the chart.</p>
+        </noscript>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="pds-section" aria-labelledby="routesHeading">
+  <div class="pds-section-head">
+    <h2 id="routesHeading">Working endpoints</h2>
+    <p>Every link on this page resolves to a real route.</p>
+  </div>
+  <div class="pds-table-wrap">
+    <table class="pds-table">
+      <thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>GET</td><td>/</td><td>This overview and system telemetry</td></tr>
+        <tr><td>GET</td><td>/health</td><td>Machine-readable artefact and schema health</td></tr>
+        <tr><td>GET</td><td>/scan</td><td>Real URL scan form and submission control</td></tr>
+        <tr><td>POST</td><td>/scan</td><td>Validate, classify, explain and save one URL</td></tr>
+        <tr><td>GET</td><td>/scan/&lt;id&gt;/report</td><td>Printable report for a scan you own</td></tr>
+        <tr><td>GET</td><td>/dashboard</td><td>Live aggregates, real charts and measured model figures</td></tr>
+        <tr><td>GET</td><td>/history</td><td>Filtered, paginated scan history</td></tr>
+        <tr><td>GET</td><td>/history/export.csv</td><td>CSV download of visible scan rows</td></tr>
+        <tr><td>GET</td><td>/admin</td><td>Administrator console (role-restricted)</td></tr>
+        <tr><td>GET</td><td>/admin/export.csv</td><td>Full CSV export (administrators only)</td></tr>
+        <tr><td>GET</td><td>/auth/session</td><td>Current session state</td></tr>
+        <tr><td>GET</td><td>/auth/csrf-token</td><td>Token for state-changing requests</td></tr>
+        <tr><td>GET/POST</td><td>/login</td><td>Sign-in form and authentication</td></tr>
+        <tr><td>GET/POST</td><td>/register</td><td>Create a normal user account</td></tr>
+        <tr><td>POST</td><td>/logout</td><td>Clear the session (CSRF token required)</td></tr>
+        <tr><td>POST</td><td>/api/v1/scan</td><td>Versioned JSON detection contract (CSRF token required)</td></tr>
+        <tr><td>GET</td><td>/api/v1/model/info</td><td>Measured model card, states and thresholds at runtime</td></tr>
+        <tr><td>GET</td><td>/api/v1/scans</td><td>Scoped, filtered JSON scan history</td></tr>
+        <tr><td>GET</td><td>/api/v1/scans/&lt;id&gt;</td><td>One authorised scan, rebuilt from its audit row</td></tr>
+        <tr><td>GET</td><td>/api/v1/health</td><td>API readiness and artefact status</td></tr>
+        <tr><td>GET</td><td>/api/v1/csrf-token</td><td>Session token for API POSTs</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="pds-section" aria-labelledby="safetyHeading">
+  <div class="pds-banner">
+    <span class="pds-pill pds-pill-ok">SAFETY NOTICE</span>
+    <div>
+      <strong>Static, lexical URL analysis only.</strong>
+      <p>
+        No submitted URL is visited, resolved or executed, so there is no SSRF
+        surface and no contact with live malicious sites. A LEGITIMATE result
+        is <strong>not</strong> a guarantee that a website is safe. Results are
+        correlations learned from a specific training distribution, not
+        universal truths about the web.
+      </p>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1309 1140" width="1309" height="956" role="img" aria-labelledby="t d">
+  <title id="t">UML sequence diagram — one URL scan request</title>
+  <desc id="d">Fourteen numbered messages show one scan: the client posts a URL with a CSRF token, the handler validates and normalises it, extracts 15 lexical features, asks the DetectionRegistry for a decision, which scores with the model, applies the measured dual thresholds, persists the audit row and returns a three-state verdict.</desc>
+  <rect width="1309" height="1140" fill="#ffffff"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1d4ed8"/></marker>
+    <marker id="rarrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#64748b"/></marker>
+  </defs>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<text x="28" y="30" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="start">One scan request — POST /scan (HTML) and POST /api/v1/scan (JSON) share this path</text>
+    <rect x="27" y="62" width="146" height="44" rx="5" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="100" y="81" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">Browser / client</text>
+<text x="100" y="97" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#475569" text-anchor="middle">(HTML + JSON API)</text>
+    <rect x="183" y="62" width="146" height="44" rx="5" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="256" y="81" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">routes.scanning</text>
+<text x="256" y="97" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#475569" text-anchor="middle">POST handler</text>
+    <rect x="339" y="62" width="146" height="44" rx="5" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="412" y="81" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">validation</text>
+<text x="412" y="97" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#475569" text-anchor="middle">validate_url()</text>
+    <rect x="495" y="62" width="146" height="44" rx="5" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="568" y="81" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">feature_extraction</text>
+<text x="568" y="97" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#475569" text-anchor="middle">extract_features()</text>
+    <rect x="651" y="62" width="146" height="44" rx="5" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="724" y="81" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">DetectionRegistry</text>
+<text x="724" y="97" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#475569" text-anchor="middle">scan()</text>
+    <rect x="807" y="62" width="146" height="44" rx="5" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="880" y="81" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">PredictionModel</text>
+<text x="880" y="97" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#475569" text-anchor="middle">score()</text>
+    <rect x="963" y="62" width="146" height="44" rx="5" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="1036" y="81" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">decide()</text>
+<text x="1036" y="97" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#475569" text-anchor="middle">explain()</text>
+    <rect x="1119" y="62" width="146" height="44" rx="5" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="1192" y="81" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">SQLite</text>
+<text x="1192" y="97" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#475569" text-anchor="middle">scan_history</text>
+<text x="114" y="140" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="start">1. POST /scan {url, csrf_token} — or POST /api/v1/scan {url} with X-CSRF-Token</text>
+    <line x1="106" y1="153" x2="250" y2="153" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="270" y="181" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="start">2. validate_url(raw)</text>
+    <line x1="262" y1="194" x2="406" y2="194" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arrow)"/>
+    <path d="M412 222 h36 v26 h-36" fill="none" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="458" y="234" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#047857" text-anchor="start">2a. reject empty / &gt; 2048 chars, parse scheme: only http and https</text>
+<text x="458" y="274" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#64748b" text-anchor="start">string parsing only — no socket, no DNS lookup, no HTTP request</text>
+<text x="270" y="298" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="start">3. ValidatedURL(normalised, scheme, host)</text>
+    <line x1="406" y1="311" x2="262" y2="311" stroke="#475569" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#rarrow)"/>
+<text x="270" y="339" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="start">4. extract_features(normalised)</text>
+    <line x1="262" y1="352" x2="562" y2="352" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="270" y="380" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="start">5. dict of exactly 15 float features in FEATURE_ORDER</text>
+    <line x1="562" y1="393" x2="262" y2="393" stroke="#475569" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#rarrow)"/>
+<text x="270" y="421" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="start">6. registry.scan(raw, user_id=current_user or None)</text>
+    <line x1="262" y1="434" x2="718" y2="434" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="738" y="462" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="start">7. score(features) → predict_proba(class 1)</text>
+    <line x1="730" y1="475" x2="874" y2="475" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="738" y="503" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="start">8. p ∈ [0, 1] — an uncalibrated estimate, never shown alone</text>
+    <line x1="874" y1="516" x2="730" y2="516" stroke="#475569" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#rarrow)"/>
+<text x="738" y="544" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="start">9. decide(p, low=0.05, high=0.95) → explain(...)</text>
+    <line x1="730" y1="557" x2="1030" y2="557" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="738" y="585" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="start">10. Decision + Explanation — 3 states, uncertainty wording, caveats</text>
+    <line x1="1030" y1="598" x2="730" y2="598" stroke="#475569" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#rarrow)"/>
+<text x="738" y="626" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="start">11. INSERT ScanHistory (url, features_json, score, verdict) + COMMIT</text>
+    <line x1="730" y1="639" x2="1186" y2="639" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="738" y="667" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="start">12. scan_id — or rollback and 503 DATABASE_UNAVAILABLE</text>
+    <line x1="1186" y1="680" x2="730" y2="680" stroke="#475569" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#rarrow)"/>
+<text x="270" y="708" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="start">13. DetectionResult(score, decision, explanation, persisted=True)</text>
+    <line x1="718" y1="721" x2="262" y2="721" stroke="#475569" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#rarrow)"/>
+<text x="114" y="749" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="start">14. 200 + rendered result page, or the same object as JSON</text>
+    <line x1="250" y1="762" x2="106" y2="762" stroke="#475569" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#rarrow)"/>
+  <rect x="28" y="796" width="1253" height="134" fill="none" stroke="#b91c1c" stroke-width="1.6"/>
+  <path d="M28 796 h118 v20 h-118 z" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.6"/>
+<text x="38" y="811" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#b91c1c" text-anchor="start">alt / failure</text>
+<text x="44" y="838" font-family="Consolas, 'DejaVu Sans Mono', monospace" font-size="11" font-weight="bold" fill="#b91c1c" text-anchor="start">400 INVALID_URL</text>
+<text x="221" y="838" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#7f1d1d" text-anchor="start">empty, unparseable, non-http(s) scheme or longer than 2048 characters — raised at step 2.</text>
+<text x="44" y="860" font-family="Consolas, 'DejaVu Sans Mono', monospace" font-size="11" font-weight="bold" fill="#b91c1c" text-anchor="start">400 CSRF_FAILED</text>
+<text x="221" y="860" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#7f1d1d" text-anchor="start">bad or missing token — rejected by the framework before the handler runs at all.</text>
+<text x="44" y="882" font-family="Consolas, 'DejaVu Sans Mono', monospace" font-size="11" font-weight="bold" fill="#b91c1c" text-anchor="start">503 MODEL_UNAVAILABLE</text>
+<text x="221" y="882" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#7f1d1d" text-anchor="start">the registry has no loaded, hash-verified bundle — raised before step 7.</text>
+<text x="44" y="904" font-family="Consolas, 'DejaVu Sans Mono', monospace" font-size="11" font-weight="bold" fill="#b91c1c" text-anchor="start">503 DATABASE_UNAVAILABLE</text>
+<text x="221" y="904" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#7f1d1d" text-anchor="start">the INSERT fails — the transaction is rolled back at step 11, so no partial row survives.</text>
+<text x="44" y="926" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#b91c1c" text-anchor="start">No failure path writes a partial audit row, and no code path ever opens an outbound connection.</text>
+    <line x1="100" y1="106" x2="100" y2="788" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 4"/>
+    <line x1="256" y1="106" x2="256" y2="788" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 4"/>
+    <line x1="412" y1="106" x2="412" y2="788" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 4"/>
+    <line x1="568" y1="106" x2="568" y2="788" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 4"/>
+    <line x1="724" y1="106" x2="724" y2="788" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 4"/>
+    <line x1="880" y1="106" x2="880" y2="788" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 4"/>
+    <line x1="1036" y1="106" x2="1036" y2="788" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 4"/>
+    <line x1="1192" y1="106" x2="1192" y2="788" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 4"/>
+  </g>
+</svg>

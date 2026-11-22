@@ -1,0 +1,120 @@
+{
+  "stage": 6,
+  "generated_at_utc": "2026-11-06T12:48:02+00:00",
+  "schema_version": "1.0",
+  "feature_schema_version": "1.0",
+  "model_version": "1.0.0",
+  "model_name": "logistic_regression",
+  "estimator_class": "LogisticRegression",
+  "feature_order": [
+    "url_length",
+    "domain_length",
+    "num_dots",
+    "num_hyphens",
+    "num_special_chars",
+    "num_digits",
+    "has_ip_address",
+    "has_at_symbol",
+    "has_suspicious_pattern",
+    "num_subdomains",
+    "has_https",
+    "is_shortened",
+    "num_suspicious_words",
+    "has_unusual_port",
+    "has_encoded_chars"
+  ],
+  "class_labels": {
+    "0": "legitimate",
+    "1": "phishing"
+  },
+  "thresholds": {
+    "low": 0.05,
+    "high": 0.95,
+    "provisional_defaults_replaced": {
+      "low": 0.3,
+      "high": 0.7
+    }
+  },
+  "threshold_selection": {
+    "criterion": "Validation-split grid search over (T_low, T_high). Feasible: recall >= 0.90 on decisive predictions, abstention rate <= 0.25, band gap >= 0.10. Objective: maximise F1 on decisive predictions; tie-break by fewest false negatives, then lowest abstention rate, then threshold values. Model selection uses the same objective across candidates, tie-broken by highest validation ROC-AUC.",
+    "constraints": {
+      "recall_min": 0.9,
+      "max_abstention_rate": 0.25,
+      "min_band_gap": 0.1,
+      "grid_step": 0.05
+    },
+    "total_pairs": 81,
+    "feasible_pairs": 81,
+    "validation_rows": 35302,
+    "abstention_rate": 0.198006,
+    "recall": 0.99698,
+    "false_negatives": 40,
+    "f1": 0.998337
+  },
+  "selection_criterion": "Validation-split grid search over (T_low, T_high). Feasible: recall >= 0.90 on decisive predictions, abstention rate <= 0.25, band gap >= 0.10. Objective: maximise F1 on decisive predictions; tie-break by fewest false negatives, then lowest abstention rate, then threshold values. Model selection uses the same objective across candidates, tie-broken by highest validation ROC-AUC.",
+  "score_meaning": "Model score: the model's uncalibrated estimate of P(phishing | URL features), computed by predict_proba on 15 lexical URL features. It is not a calibrated probability that the website is malicious, and it is not a guarantee.",
+  "decision_states": {
+    "LEGITIMATE": {
+      "colour": "green",
+      "risk_level": "LOW",
+      "message": "No phishing indicators detected by this model.",
+      "warning": "This result is not a guarantee that the website is safe. The model only analysed the URL string and did not visit the site."
+    },
+    "PHISHING": {
+      "colour": "red",
+      "risk_level": "HIGH",
+      "message": "Potential phishing website detected.",
+      "warning": "Do not enter passwords, card details, one-time codes or personal information on this website."
+    },
+    "SUSPICIOUS": {
+      "colour": "orange",
+      "risk_level": "MEDIUM",
+      "message": "This website requires further investigation.",
+      "warning": "The score falls inside the uncertainty band; the model is abstaining. Treat this as unresolved, not as a 50/50 probability. Verify the sender and domain before continuing."
+    }
+  },
+  "model_bundle_sha256": "841bb211e4b043335a81407c0f2ebe39de7293b73cdb4c7e013ea9766b11dd50",
+  "dataset": {
+    "train_sha256": "bdb7ba6bb2a8118c04cd8bf6b06a3b733a8d7e58003b29159c6c8cecad9d0734",
+    "validation_sha256": "6e6c913a0690245214732c51cb193bea9f7ec67c2968d797393a0dc25403f39f",
+    "test_sha256": "c06d5392c03d30fc40bff6b75efb8898f1b9aa1924122c1acc43f3d8f7a4bf28",
+    "split_sizes": {
+      "train": 164744,
+      "validation": 35302,
+      "test": 35302
+    },
+    "class_distribution": {
+      "train": {
+        "legitimate": 93690,
+        "phishing": 71054
+      },
+      "validation": {
+        "legitimate": 20580,
+        "phishing": 14722
+      },
+      "test": {
+        "legitimate": 20580,
+        "phishing": 14722
+      }
+    }
+  },
+  "library_versions": {
+    "python": "3.13.16",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "sklearn": "1.6.1",
+    "joblib": "1.5.3"
+  },
+  "limitations": [
+    "Static URL-only analysis: no page content, redirects, DNS age, TLS certificate, domain reputation or external API is consulted. The backend never visits a submitted URL.",
+    "Measured on a held-out sample of the PhiUSIIL (UCI 967) distribution donated in 2024; newer phishing tactics may not be represented. Results are not universal web accuracy.",
+    "Dataset shortcut: 100.00% of legitimate training URLs used HTTPS versus 56.90% of phishing URLs. HTTPS alone does not mean a website is legitimate.",
+    "MEASURED CONFIRMATION OF THAT BIAS: validation permutation importance is dominated by has_https (+0.5840), url_length (+0.3276), domain_length (+0.2856). The has_https decrease in ROC-AUC is +0.584041, far above every other feature, so the selected model relies heavily on a signal that is not a real-world safety indicator. Reported accuracy is therefore OPTIMISTIC on traffic where phishing sites also use TLS. An ablation study removing has_https is recommended future work and must be discussed at the viva.",
+    "Model scores from predict_proba are UNCALIBRATED and must never be presented as a guaranteed probability that a website is malicious.",
+    "SUSPICIOUS is an abstention band over a binary classifier, not a third ground-truth class; a phishing URL in the band is unresolved, not classified safe.",
+    "The a priori 25% abstention cap allowed a measured 19.80% validation abstention rate; roughly one in five URLs is unresolved rather than given a binary verdict. This is an honest trade-off for fewer false negatives, not extra accuracy. A tighter cap or an abstention penalty is a design alternative for future work.",
+    "Fixed hyperparameters without cross-validated tuning; depth-capped trees may underfit rare patterns. See docs/TRAINING.md.",
+    "URL shorteners, newly registered lookalike domains and compromised legitimate domains can evade lexical features.",
+    "Not a safety guarantee; the system is an educational screening aid and must not replace user judgement or dedicated security tooling."
+  ]
+}

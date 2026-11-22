@@ -1,0 +1,16 @@
+feature,definition,kind,overall_mean,legitimate_mean,phishing_mean,overall_present_pct,legitimate_present_pct,phishing_present_pct,min,max
+url_length,Number of characters in the normalised URL string.,count,37.6377,27.2152,51.3806,100.0,100.0,100.0,14,1769
+domain_length,"Number of characters in the hostname (excluding userinfo, port and brackets).",count,22.0833,19.2152,25.865,100.0,100.0,100.0,4,110
+num_dots,Count of '.' characters in the whole normalised URL.,count,2.3336,2.1875,2.5263,100.0,100.0,100.0,1,43
+num_hyphens,Count of '-' characters in the whole normalised URL.,count,0.401,0.0828,0.8206,21.855,7.431,40.875,0,48
+num_special_chars,Count of non-alphanumeric characters that are not ordinary URL structure characters (see docs/FEATURES.md).,count,0.0433,0.0,0.1004,1.561,0.0,3.618,0,31
+num_digits,Count of digit characters in the whole normalised URL.,count,2.3469,0.0505,5.3749,25.825,2.641,56.395,0,662
+has_ip_address,"1 when the host is a literal IPv4/IPv6 address instead of a domain name, else 0.",binary,0.0033,0.0,0.0077,0.33,0.0,0.766,0,1
+has_at_symbol,"1 when the URL contains '@' (userinfo before the real host), else 0.",binary,0.0082,0.0,0.019,0.821,0.0,1.904,0,1
+has_suspicious_pattern,"1 when any documented obfuscation pattern is present (double slash in path, multiple '?', deep subdomain chain, or brand token in a lookalike host), else 0.",binary,0.0502,0.019,0.0912,5.016,1.903,9.12,0,1
+num_subdomains,Number of host labels before the approximate registrable domain (0 for a bare domain or an IP host).,count,1.1254,1.0919,1.1696,91.271,99.998,79.765,0,10
+has_https,"1 when the scheme is https, else 0. WEAK feature: HTTPS alone never means legitimate.",binary,0.8141,1.0,0.569,81.411,100.0,56.9,0,1
+is_shortened,"1 when the registrable domain is in the maintained static list of URL shorteners, else 0.",binary,0.0049,0.0,0.0114,0.492,0.002,1.139,0,1
+num_suspicious_words,"Case-insensitive substring count of login, verify, update, secure, account, banking and confirm in the URL.",count,0.0399,0.0007,0.0916,3.004,0.075,6.867,0,6
+has_unusual_port,"1 when an explicit port other than 80/443 is present, else 0.",binary,0.0001,0.0,0.0002,0.008,0.0,0.018,0,1
+has_encoded_chars,"1 when percent-encoded (%xx) or legacy %uXXXX sequences are present, else 0.",binary,0.0047,0.0,0.0109,0.472,0.0,1.095,0,1

@@ -1,0 +1,163 @@
+{# Shared result and report body. Both pages receive one DetectionResult. #}
+<section class="pds-section" aria-labelledby="verdictHeading">
+  <div class="pds-section-head">
+    <h2 id="verdictHeading">Detection result</h2>
+    <p>Scan #{{ result.scan_id }} &middot; generated from a real estimator output and saved to the audit database.</p>
+  </div>
+
+  <article class="pds-result pds-result-{{ result.decision.prediction|lower }}"
+           aria-label="Classification {{ result.decision.prediction }}">
+    <div class="pds-result-head">
+      <div>
+        <p class="pds-card-label">CLASSIFICATION</p>
+        <h3 id="classificationValue">{{ result.decision.prediction }}</h3>
+      </div>
+      <div class="pds-result-badges">
+        <span class="pds-pill">RISK: {{ result.decision.risk_level }}</span>
+        <span class="pds-pill">CONTRACT COLOUR: {{ result.decision.colour }}</span>
+        {% if result.decision.uncertain %}
+          <span class="pds-pill">UNCERTAIN &middot; MODEL ABSTAINING</span>
+        {% endif %}
+      </div>
+    </div>
+    <p class="pds-result-message" id="decisionMessage">{{ result.decision.message }}</p>
+    <p class="pds-result-warning" id="decisionWarning">{{ result.decision.warning }}</p>
+  </article>
+
+  <div class="pds-meta-grid">
+    <article class="pds-card">
+      <p class="pds-card-label">Submitted URL</p>
+      <p class="pds-card-value pds-url-value pds-mono" id="submittedUrl">{{ result.display_url }}</p>
+      <p class="pds-card-note">
+        Normalised: <code id="normalisedUrl">{{ result.normalized_url }}</code>
+      </p>
+      <button class="pds-btn pds-btn-ghost pds-btn-small" type="button"
+              data-copy-target="#normalisedUrl">Copy URL</button>
+    </article>
+    <article class="pds-card">
+      <p class="pds-card-label">Model score (clearly labelled)</p>
+      <p class="pds-card-value pds-mono" id="modelScore">{{ '%.6f'|format(result.score) }}</p>
+      <p class="pds-card-note">
+        Uncalibrated <code>predict_proba</code> estimate &mdash;
+        <strong>not</strong> a guaranteed probability of maliciousness.
+      </p>
+    </article>
+    <article class="pds-card">
+      <p class="pds-card-label">Risk level</p>
+      <p class="pds-card-value">{{ result.decision.risk_level }}</p>
+      <p class="pds-card-note">From the decision-state contract</p>
+    </article>
+    <article class="pds-card">
+      <p class="pds-card-label">Date and time (UTC)</p>
+      <p class="pds-card-value pds-mono">{{ result.scan_date.strftime('%Y-%m-%d %H:%M:%S UTC') }}</p>
+      <p class="pds-card-note">Scan #{{ result.scan_id }} &middot; {{ result.model_name }} v{{ result.model_version }}</p>
+    </article>
+  </div>
+
+  <article class="pds-card pds-note-block">
+    <p class="pds-card-label">What the score means</p>
+    <p id="scoreMeaning">{{ result.decision.score_meaning }}</p>
+    <p id="uncertaintyNote">{{ result.explanation.uncertainty_note }}</p>
+    <p>
+      Decision rule: score &le; {{ result.decision.threshold_low }} &rarr;
+      LEGITIMATE; score &ge; {{ result.decision.threshold_high }} &rarr;
+      PHISHING; {{ result.decision.band() }} &rarr; SUSPICIOUS. The thresholds
+      were measured on the validation split, not chosen here.
+    </p>
+  </article>
+
+  <article class="pds-card pds-action-card">
+    <p class="pds-card-label">Recommended action</p>
+    <p id="recommendedAction">{{ result.explanation.recommended_action }}</p>
+    <div class="pds-actions">
+      <a class="pds-btn pds-btn-ghost" href="{{ url_for('scanning.scan_report', scan_id=result.scan_id) }}">Printable report</a>
+      <button class="pds-btn pds-btn-ghost" type="button" data-print>Print this result</button>
+      <a class="pds-btn" href="{{ url_for('scanning.scan_form') }}#scan-form">Scan another URL</a>
+    </div>
+  </article>
+</section>
+
+<section class="pds-section" aria-labelledby="explanationHeading">
+  <div class="pds-section-head">
+    <h2 id="explanationHeading">Suspicious-feature explanations</h2>
+    <p>
+      Observations from the URL string, annotated with the documented rationale.
+      These describe characteristics; they do <strong>not</strong> produce the
+      verdict and are not proof of malicious intent.
+    </p>
+  </div>
+  {% if result.explanation.flagged %}
+    <div class="pds-flag-list">
+      {% for item in result.explanation.flagged %}
+        <article class="pds-card pds-flag-card">
+          <p class="pds-card-label">{{ item.label }} &middot; observed value {{ item.value }}</p>
+          <p>{{ item.rationale }}</p>
+          <p class="pds-card-note">{{ item.definition }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <article class="pds-card">
+      <p class="pds-card-label">No documented obfuscation indicators observed</p>
+      <p>
+        None of the flagged indicator features were present in this URL. That
+        is an observation, not an assurance: a clean-looking URL can still be
+        malicious, and the model may still have abstained or raised an alert
+        from other characteristics.
+      </p>
+    </article>
+  {% endif %}
+</section>
+
+<section class="pds-section" aria-labelledby="characteristicsHeading">
+  <div class="pds-section-head">
+    <h2 id="characteristicsHeading">Extracted URL characteristics</h2>
+    <p>
+      All {{ result.explanation.insights|length }} features are the same ones
+      used in training. Importance is the measured mean ROC-AUC decrease from
+      permutation testing, read at runtime from
+      <code>{{ result.explanation.importance_source }}</code>.
+    </p>
+  </div>
+  <div class="pds-table-wrap">
+    <table class="pds-table pds-feature-table">
+      <thead>
+        <tr>
+          <th scope="col">Characteristic</th>
+          <th scope="col">Value</th>
+          <th scope="col">Definition</th>
+          <th scope="col">Measured importance</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in result.explanation.insights %}
+          <tr class="{{ 'pds-row-flagged' if item.indicator and item.observed else '' }}">
+            <th scope="row" class="pds-mono">{{ item.name }}</th>
+            <td class="pds-mono">{{ item.value }}</td>
+            <td>{{ item.definition }}</td>
+            <td class="pds-mono">{{ '%.6f'|format(item.importance) }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="pds-card-note pds-note-block">
+    A small negative measured importance means shuffling that feature did not
+    reduce ROC-AUC on the sampled rows — it carried no measurable signal. Values
+    are shown as measured, not clamped or invented.
+  </p>
+</section>
+
+<section class="pds-section" aria-labelledby="caveatsHeading">
+  <div class="pds-section-head">
+    <h2 id="caveatsHeading">Limitations and uncertainty</h2>
+    <p>Read these alongside the verdict.</p>
+  </div>
+  <article class="pds-card">
+    <ul class="pds-caveat-list">
+      {% for caveat in result.explanation.caveats %}
+        <li>{{ caveat }}</li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>

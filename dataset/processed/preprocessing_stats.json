@@ -1,0 +1,25 @@
+{
+  "accounting": {
+    "raw_rows": 235795,
+    "after_missing_removed": 235795,
+    "after_unknown_labels_removed": 235795,
+    "after_invalid_urls_removed": 235787,
+    "label_encoded_rows": 235787,
+    "conflicting_label_urls": 0,
+    "conflicting_rows_removed": 0,
+    "after_conflicts_removed": 235787,
+    "exact_duplicates_removed": 439,
+    "clean_rows": 235348
+  },
+  "grouping": {
+    "method": "union-find over registrable domain + non-generic path signature",
+    "max_template_domains": 20,
+    "distinct_domains": 179488,
+    "distinct_path_signatures": 13885,
+    "generic_signatures_excluded": 44,
+    "rows_with_generic_signature": 211719,
+    "group_count": 177201,
+    "largest_group_size": 23675,
+    "singleton_group_count": 171285
+  }
+}

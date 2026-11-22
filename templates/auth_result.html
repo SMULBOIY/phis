@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} &middot; {{ app_name }}{% endblock %}
+{% block content %}
+
+<div class="pds-centered">
+  <section class="pds-message-card" role="status">
+    <p class="pds-eyebrow">ACCOUNT</p>
+    <h1>{{ title }}</h1>
+    <p>{{ message }}</p>
+    <p class="pds-card-note">{{ detail }}</p>
+    <div class="pds-message-actions">
+      <a class="pds-btn" href="{{ url_for('core.index') }}">Return to overview</a>
+      {% if authenticated %}
+        <a class="pds-btn pds-btn-ghost" href="{{ url_for('auth.session_state') }}">View session state</a>
+      {% else %}
+        <a class="pds-btn pds-btn-ghost" href="{{ url_for('auth.login') }}">Go to sign in</a>
+      {% endif %}
+    </div>
+    <p class="pds-security-note">
+      No plaintext password, password hash or measured evaluation figure is
+      ever included in this response.
+    </p>
+  </section>
+</div>
+
+{% endblock %}

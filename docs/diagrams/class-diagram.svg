@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 860" width="1180" height="860" role="img" aria-labelledby="title desc">
+  <title id="title">UML class diagram — ORM entities and the detection service layer</title>
+  <desc id="desc">Three SQLAlchemy entities (User, ScanHistory, ModelInformation) and the service classes that produce a decision: ModelRegistry, PredictionModel, DetectionRegistry, Decision and Explanation.</desc>
+  <rect width="1180" height="860" fill="#ffffff"/>
+
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <!-- ORM layer -->
+    <text x="30" y="34" font-size="15" font-weight="700" fill="#0f172a">Persistence layer — models/database_models.py (SQLAlchemy 2.0)</text>
+
+    <!-- User -->
+    <g>
+      <rect x="30" y="52" width="330" height="228" rx="6" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="2"/>
+      <line x1="30" y1="78" x2="360" y2="78" stroke="#1d4ed8" stroke-width="1.6"/>
+      <text x="195" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">User  (UserMixin)</text>
+      <text x="44" y="98" font-size="12" fill="#0f172a">– id : int «PK»</text>
+      <text x="44" y="116" font-size="12" fill="#0f172a">– username : str «unique»</text>
+      <text x="44" y="134" font-size="12" fill="#0f172a">– email : str «unique»</text>
+      <text x="44" y="152" font-size="12" fill="#0f172a">– password_hash : str  «scrypt»</text>
+      <text x="44" y="170" font-size="12" fill="#0f172a">– role : str  {user | admin}</text>
+      <text x="44" y="188" font-size="12" fill="#0f172a">– active : bool</text>
+      <text x="44" y="206" font-size="12" fill="#0f172a">– created_at, last_login_at : datetime</text>
+      <line x1="30" y1="218" x2="360" y2="218" stroke="#1d4ed8" stroke-width="1.2"/>
+      <text x="44" y="236" font-size="12" fill="#0f172a">+ set_password(pw) · check_password(pw)</text>
+      <text x="44" y="254" font-size="12" fill="#0f172a">+ is_admin · is_active · to_dict()</text>
+      <text x="44" y="272" font-size="11" fill="#7c2d12">no plaintext column exists</text>
+    </g>
+
+    <!-- ScanHistory -->
+    <g>
+      <rect x="410" y="52" width="350" height="246" rx="6" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="2"/>
+      <line x1="410" y1="78" x2="760" y2="78" stroke="#1d4ed8" stroke-width="1.6"/>
+      <text x="585" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ScanHistory</text>
+      <text x="424" y="98" font-size="12" fill="#0f172a">– id : int «PK»</text>
+      <text x="424" y="116" font-size="12" fill="#0f172a">– user_id : int? «FK → users.id»</text>
+      <text x="424" y="134" font-size="12" fill="#0f172a">– url, normalised_url : str ≤2048</text>
+      <text x="424" y="152" font-size="12" fill="#0f172a">– prediction : {LEGITIMATE|SUSPICIOUS|PHISHING}</text>
+      <text x="424" y="170" font-size="12" fill="#0f172a">– model_score : float  0 ≤ p ≤ 1</text>
+      <text x="424" y="188" font-size="12" fill="#0f172a">– risk_level : {LOW|MEDIUM|HIGH}</text>
+      <text x="424" y="206" font-size="12" fill="#0f172a">– model_version : str · scan_date : datetime</text>
+      <text x="424" y="224" font-size="12" fill="#0f172a">– features_json : text (15-feature snapshot)</text>
+      <line x1="410" y1="236" x2="760" y2="236" stroke="#1d4ed8" stroke-width="1.2"/>
+      <text x="424" y="254" font-size="12" fill="#0f172a">+ to_dict()</text>
+      <text x="424" y="274" font-size="11" fill="#7c2d12">user_id NULL ⇒ guest scan (first class)</text>
+      <text x="424" y="290" font-size="11" fill="#7c2d12">ON DELETE SET NULL keeps history</text>
+    </g>
+
+    <!-- ModelInformation -->
+    <g>
+      <rect x="800" y="52" width="350" height="228" rx="6" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="2"/>
+      <line x1="800" y1="78" x2="1150" y2="78" stroke="#1d4ed8" stroke-width="1.6"/>
+      <text x="975" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ModelInformation</text>
+      <text x="814" y="98" font-size="12" fill="#0f172a">– id : int «PK»</text>
+      <text x="814" y="116" font-size="12" fill="#0f172a">– model_name, model_version «unique pair»</text>
+      <text x="814" y="134" font-size="12" fill="#0f172a">– training_date : datetime</text>
+      <text x="814" y="152" font-size="12" fill="#0f172a">– accuracy, precision, recall, f1_score,</text>
+      <text x="814" y="168" font-size="12" fill="#0f172a">  roc_auc : float?  (copied from metrics.json)</text>
+      <text x="814" y="186" font-size="12" fill="#0f172a">– dataset_fingerprint : str (SHA-256)</text>
+      <text x="814" y="204" font-size="12" fill="#0f172a">– feature_count : int · metrics_source : str</text>
+      <line x1="800" y1="216" x2="1150" y2="216" stroke="#1d4ed8" stroke-width="1.2"/>
+      <text x="814" y="234" font-size="12" fill="#0f172a">+ to_dict()</text>
+      <text x="814" y="254" font-size="11" fill="#7c2d12">no value is typed into code:</text>
+      <text x="814" y="270" font-size="11" fill="#7c2d12">seeded by scripts/init_db.py from the artefact</text>
+    </g>
+
+    <!-- User 1 to 0..* ScanHistory -->
+    <g stroke="#0f172a" stroke-width="1.8" fill="none">
+      <line x1="360" y1="150" x2="410" y2="150"/>
+    </g>
+    <text x="385" y="140" text-anchor="middle" font-size="10" font-weight="700" fill="#0f172a">1</text>
+    <text x="385" y="172" text-anchor="middle" font-size="10" font-weight="700" fill="#0f172a">0..*</text>
+    <text x="385" y="188" text-anchor="middle" font-size="10" fill="#475569">scans</text>
+
+    <!-- Service layer -->
+    <text x="30" y="352" font-size="15" font-weight="700" fill="#0f172a">Service layer — one pipeline, no second inference path</text>
+
+    <!-- ModelRegistry -->
+    <g>
+      <rect x="30" y="368" width="270" height="150" rx="6" fill="#ecfdf5" stroke="#047857" stroke-width="2"/>
+      <line x1="30" y1="394" x2="300" y2="394" stroke="#047857" stroke-width="1.6"/>
+      <text x="165" y="386" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">ModelRegistry</text>
+      <text x="44" y="414" font-size="12" fill="#0f172a">– metadata : ModelMetadata</text>
+      <text x="44" y="432" font-size="12" fill="#0f172a">– bundle_available : bool</text>
+      <text x="44" y="450" font-size="12" fill="#0f172a">– bundle_detail : str</text>
+      <line x1="30" y1="460" x2="300" y2="460" stroke="#047857" stroke-width="1.2"/>
+      <text x="44" y="478" font-size="12" fill="#0f172a">+ verify_sha256() · public_info()</text>
+      <text x="44" y="496" font-size="12" fill="#0f172a">+ health() · dataset_chart()</text>
+    </g>
+
+    <!-- PredictionModel -->
+    <g>
+      <rect x="330" y="368" width="250" height="150" rx="6" fill="#ecfdf5" stroke="#047857" stroke-width="2"/>
+      <line x1="330" y1="394" x2="580" y2="394" stroke="#047857" stroke-width="1.6"/>
+      <text x="455" y="386" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">PredictionModel</text>
+      <text x="344" y="414" font-size="12" fill="#0f172a">– estimator : Pipeline</text>
+      <text x="344" y="432" font-size="12" fill="#0f172a">– feature_order : tuple[15]</text>
+      <text x="344" y="450" font-size="12" fill="#0f172a">– phishing_index : int</text>
+      <line x1="330" y1="460" x2="580" y2="460" stroke="#047857" stroke-width="1.2"/>
+      <text x="344" y="478" font-size="12" fill="#0f172a">+ score(features) → float</text>
+      <text x="344" y="496" font-size="12" fill="#0f172a">+ describe()</text>
+    </g>
+
+    <!-- DetectionRegistry -->
+    <g>
+      <rect x="610" y="368" width="270" height="170" rx="6" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="2"/>
+      <line x1="610" y1="394" x2="880" y2="394" stroke="#1d4ed8" stroke-width="1.6"/>
+      <text x="745" y="386" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">DetectionRegistry</text>
+      <text x="624" y="414" font-size="12" fill="#0f172a">– model : PredictionModel</text>
+      <text x="624" y="432" font-size="12" fill="#0f172a">– importance : dict[str, float]</text>
+      <text x="624" y="450" font-size="12" fill="#0f172a">– error : str?</text>
+      <line x1="610" y1="460" x2="880" y2="460" stroke="#1d4ed8" stroke-width="1.2"/>
+      <text x="624" y="478" font-size="12" fill="#0f172a">+ available : bool</text>
+      <text x="624" y="496" font-size="12" fill="#0f172a">+ scan(raw_url, user_id) : DetectionResult</text>
+      <text x="624" y="514" font-size="12" fill="#0f172a">+ health()</text>
+      <text x="624" y="532" font-size="11" fill="#7c2d12">the ONLY entry point to inference</text>
+    </g>
+
+    <!-- Decision / Explanation -->
+    <g>
+      <rect x="910" y="368" width="240" height="170" rx="6" fill="#fff7ed" stroke="#c2410c" stroke-width="2"/>
+      <line x1="910" y1="394" x2="1150" y2="394" stroke="#c2410c" stroke-width="1.6"/>
+      <text x="1030" y="386" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Decision · Explanation</text>
+      <text x="924" y="414" font-size="12" fill="#0f172a">«dataclass, frozen»</text>
+      <text x="924" y="434" font-size="12" fill="#0f172a">– prediction, risk_level, colour</text>
+      <text x="924" y="452" font-size="12" fill="#0f172a">– uncertain, threshold_low/high</text>
+      <text x="924" y="470" font-size="12" fill="#0f172a">– insights, flagged, top[5]</text>
+      <text x="924" y="488" font-size="12" fill="#0f172a">– recommended_action, caveats</text>
+      <line x1="910" y1="498" x2="1150" y2="498" stroke="#c2410c" stroke-width="1.2"/>
+      <text x="924" y="516" font-size="12" fill="#0f172a">+ band() · to_dict()</text>
+      <text x="924" y="534" font-size="11" fill="#7c2d12">carries uncertainty wording</text>
+    </g>
+
+    <!-- dependencies -->
+    <g stroke="#475569" stroke-width="1.5" fill="none" stroke-dasharray="6 4">
+      <line x1="745" y1="368" x2="745" y2="298"/>
+      <path d="M165 518 v34 h290 v-34"/>
+      <line x1="880" y1="470" x2="910" y2="470"/>
+      <line x1="610" y1="500" x2="580" y2="470"/>
+      <line x1="745" y1="538" x2="745" y2="610"/>
+    </g>
+    <text x="752" y="322" font-size="11" fill="#475569">verifies</text>
+    <text x="310" y="572" text-anchor="middle" font-size="11" fill="#475569">loads the joblib bundle once at boot</text>
+    <text x="895" y="458" text-anchor="middle" font-size="10" fill="#475569">uses</text>
+
+    <!-- Result and persistence -->
+    <g>
+      <rect x="610" y="610" width="270" height="120" rx="6" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="2"/>
+      <line x1="610" y1="636" x2="880" y2="636" stroke="#1d4ed8" stroke-width="1.6"/>
+      <text x="745" y="628" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">DetectionResult</text>
+      <text x="624" y="656" font-size="12" fill="#0f172a">raw_url, normalized_url, features[15],</text>
+      <text x="624" y="674" font-size="12" fill="#0f172a">score, decision, explanation,</text>
+      <text x="624" y="692" font-size="12" fill="#0f172a">model_name/version, scan_id, user_id</text>
+      <text x="624" y="714" font-size="12" fill="#0f172a">+ to_dict()</text>
+    </g>
+
+    <g stroke="#0f172a" stroke-width="1.8" fill="none">
+      <line x1="745" y1="730" x2="745" y2="768"/>
+      <line x1="700" y1="768" x2="790" y2="768"/>
+      <line x1="745" y1="768" x2="745" y2="806"/>
+    </g>
+    <text x="752" y="758" font-size="11" fill="#475569">commits</text>
+    <text x="745" y="824" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">ScanHistory row  (audit trail — one per scan)</text>
+
+    <!-- Legend -->
+    <g font-size="12" fill="#475569">
+      <rect x="30" y="620" width="16" height="16" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.4"/>
+      <text x="54" y="633">entity / orchestrator</text>
+      <rect x="30" y="646" width="16" height="16" fill="#ecfdf5" stroke="#047857" stroke-width="1.4"/>
+      <text x="54" y="659">artefact handling</text>
+      <rect x="30" y="672" width="16" height="16" fill="#fff7ed" stroke="#c2410c" stroke-width="1.4"/>
+      <text x="54" y="685">pure value object</text>
+      <line x1="30" y1="706" x2="70" y2="706" stroke="#475569" stroke-width="1.5" stroke-dasharray="6 4"/>
+      <text x="80" y="710">dependency / association</text>
+    </g>
+  </g>
+</svg>

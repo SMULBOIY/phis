@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 660" width="1120" height="660" role="img" aria-labelledby="title desc">
+  <title id="title">UML deployment diagram — production topology</title>
+  <desc id="desc">A browser or API client reaches a TLS-terminating reverse proxy, which forwards to a Waitress WSGI server running the Flask application on one host; SQLite and the model artefacts are local files and the system makes no outbound network calls.</desc>
+  <rect width="1120" height="660" fill="#ffffff"/>
+
+  <defs>
+    <marker id="conn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1d4ed8"/>
+    </marker>
+  </defs>
+
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="30" y="30" font-size="16" font-weight="700" fill="#0f172a">Production deployment topology</text>
+
+    <!-- Client node -->
+    <g>
+      <rect x="30" y="120" width="230" height="150" rx="8" fill="#f8fafc" stroke="#334155" stroke-width="2"/>
+      <text x="145" y="146" text-anchor="middle" font-size="13" font-weight="700">&#171;device&#187;</text>
+      <text x="145" y="166" text-anchor="middle" font-size="13" font-weight="700">Client</text>
+      <line x1="30" y1="178" x2="260" y2="178" stroke="#334155" stroke-width="1.4"/>
+      <text x="145" y="200" text-anchor="middle" font-size="12">Browser (HTML UI)</text>
+      <text x="145" y="220" text-anchor="middle" font-size="12">or curl / script</text>
+      <text x="145" y="240" text-anchor="middle" font-size="12">(JSON API)</text>
+      <text x="145" y="260" text-anchor="middle" font-size="11" fill="#475569">cookie jar + CSRF token</text>
+    </g>
+
+    <!-- Reverse proxy -->
+    <g>
+      <rect x="330" y="110" width="230" height="170" rx="8" fill="#fff7ed" stroke="#c2410c" stroke-width="2"/>
+      <text x="445" y="136" text-anchor="middle" font-size="13" font-weight="700">&#171;node&#187;</text>
+      <text x="445" y="156" text-anchor="middle" font-size="13" font-weight="700">TLS reverse proxy</text>
+      <line x1="330" y1="168" x2="560" y2="168" stroke="#c2410c" stroke-width="1.4"/>
+      <text x="445" y="190" text-anchor="middle" font-size="12">IIS / nginx / Caddy</text>
+      <text x="445" y="210" text-anchor="middle" font-size="12">HTTP/2, certificates</text>
+      <text x="445" y="230" text-anchor="middle" font-size="12">X-Forwarded-Proto</text>
+      <text x="445" y="250" text-anchor="middle" font-size="11" fill="#7c2d12">HSTS + Secure cookies</text>
+      <text x="445" y="268" text-anchor="middle" font-size="11" fill="#7c2d12">assume this hop is trusted</text>
+    </g>
+
+    <!-- Application host -->
+    <g>
+      <rect x="630" y="60" width="470" height="560" rx="10" fill="#f8fafc" stroke="#334155" stroke-width="2"/>
+      <text x="865" y="86" text-anchor="middle" font-size="13" font-weight="700">&#171;execution environment&#187; Application host</text>
+      <text x="865" y="104" text-anchor="middle" font-size="11" fill="#475569">Windows Server / Linux · Python 3.10–3.13 · one process</text>
+
+      <!-- waitress -->
+      <rect x="652" y="122" width="426" height="150" rx="8" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="2"/>
+      <text x="865" y="146" text-anchor="middle" font-size="13" font-weight="700">&#171;artifact&#187; Waitress WSGI server</text>
+      <text x="865" y="168" text-anchor="middle" font-size="12">waitress-serve --listen=127.0.0.1:8000 \</text>
+      <text x="865" y="186" text-anchor="middle" font-size="12" font-family="Consolas, Courier New, monospace">    --call wsgi:create_application</text>
+      <text x="865" y="208" text-anchor="middle" font-size="12">pure-Python · threads=4 · no root</text>
+      <text x="865" y="228" text-anchor="middle" font-size="12">binds loopback only (proxy is the edge)</text>
+      <text x="865" y="250" text-anchor="middle" font-size="11" fill="#475569">alternative: python wsgi.py</text>
+
+      <!-- flask app -->
+      <rect x="652" y="292" width="426" height="164" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="2"/>
+      <text x="865" y="316" text-anchor="middle" font-size="12" font-weight="700">&#171;component&#187; Flask application — v0.14.0 · stage 14</text>
+      <text x="865" y="338" text-anchor="middle" font-size="12">7 blueprints · 22 routes</text>
+      <text x="865" y="358" text-anchor="middle" font-size="12">core · auth · scanning · dashboard</text>
+      <text x="865" y="376" text-anchor="middle" font-size="12">history · admin · api (/api/v1)</text>
+      <text x="865" y="398" text-anchor="middle" font-size="12">strict CSP · CSRF · scrypt · per-route limits</text>
+      <text x="865" y="418" text-anchor="middle" font-size="11" fill="#475569">templates/ + static/ (vendored, offline)</text>
+      <text x="865" y="438" text-anchor="middle" font-size="11" fill="#7c2d12">no outbound socket is ever opened</text>
+
+      <!-- data stores -->
+      <rect x="652" y="476" width="200" height="122" rx="8" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="2"/>
+      <text x="752" y="498" text-anchor="middle" font-size="12" font-weight="700">&#171;artifact&#187;</text>
+      <text x="752" y="516" text-anchor="middle" font-size="12" font-weight="700">SQLite</text>
+      <text x="752" y="536" text-anchor="middle" font-size="11" font-family="Consolas, Courier New, monospace">instance/</text>
+      <text x="752" y="552" text-anchor="middle" font-size="11" font-family="Consolas, Courier New, monospace">phishing.db</text>
+      <text x="752" y="572" text-anchor="middle" font-size="11" fill="#475569">users · scan_history</text>
+      <text x="752" y="588" text-anchor="middle" font-size="11" fill="#475569">model_information</text>
+
+      <rect x="878" y="476" width="200" height="122" rx="8" fill="#fff7ed" stroke="#c2410c" stroke-width="2"/>
+      <text x="978" y="498" text-anchor="middle" font-size="12" font-weight="700">&#171;artifact&#187; Model artefacts</text>
+      <text x="978" y="518" text-anchor="middle" font-size="11" font-family="Consolas, Courier New, monospace">model_bundle.joblib</text>
+      <text x="978" y="536" text-anchor="middle" font-size="11" font-family="Consolas, Courier New, monospace">metadata.json</text>
+      <text x="978" y="554" text-anchor="middle" font-size="11" font-family="Consolas, Courier New, monospace">metrics.json</text>
+      <text x="978" y="576" text-anchor="middle" font-size="11" fill="#7c2d12">SHA-256 verified at boot</text>
+      <text x="978" y="592" text-anchor="middle" font-size="11" fill="#7c2d12">read-only at runtime</text>
+    </g>
+
+    <!-- connections -->
+    <g stroke="#1d4ed8" stroke-width="2" fill="none" marker-end="url(#conn)">
+      <line x1="260" y1="196" x2="326" y2="196"/>
+      <line x1="560" y1="196" x2="648" y2="196"/>
+      <line x1="865" y1="272" x2="865" y2="288"/>
+      <line x1="790" y1="456" x2="790" y2="472"/>
+      <line x1="940" y1="456" x2="940" y2="472"/>
+    </g>
+
+    <g font-size="11" fill="#0f172a">
+      <text x="295" y="186" text-anchor="middle" font-size="10">HTTPS 443</text>
+      <text x="606" y="186" text-anchor="middle" font-size="10">HTTP :8000</text>
+      <text x="880" y="284" font-size="10" fill="#475569">WSGI</text>
+      <text x="790" y="468" font-size="9" fill="#475569">SQLAlchemy</text>
+      <text x="956" y="468" font-size="9" fill="#475569">joblib</text>
+    </g>
+
+    <!-- no-egress note -->
+    <g>
+      <rect x="30" y="320" width="530" height="120" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1.8"/>
+      <text x="48" y="344" font-size="13" font-weight="700" fill="#065f46">No outbound network dependency</text>
+      <text x="48" y="366" font-size="12" fill="#065f46">The app never resolves, fetches or opens a submitted URL, and it</text>
+      <text x="48" y="384" font-size="12" fill="#065f46">vendors Bootstrap and Chart.js locally, so the host needs no egress</text>
+      <text x="48" y="402" font-size="12" fill="#065f46">and no CDN. That removes the SSRF surface entirely (Stage 10/12).</text>
+      <text x="48" y="424" font-size="11" fill="#065f46">Consequence: analysis is lexical only — a documented limitation.</text>
+    </g>
+
+    <!-- ops note -->
+    <g>
+      <rect x="30" y="470" width="530" height="150" rx="8" fill="#f8fafc" stroke="#334155" stroke-width="1.8"/>
+      <text x="48" y="494" font-size="13" font-weight="700" fill="#0f172a">Operational notes</text>
+      <text x="48" y="516" font-size="12">• APP_ENV=production is mandatory: DEBUG off, secure cookies,</text>
+      <text x="48" y="534" font-size="12">  HSTS, X-Frame-Options DENY, frame-ancestors 'self'.</text>
+      <text x="48" y="552" font-size="12">• SECRET_KEY comes from the environment; production refuses to</text>
+      <text x="48" y="570" font-size="12">  boot without a 32+ character key.</text>
+      <text x="48" y="588" font-size="12">• Run python scripts/init_db.py once, then create the admin.</text>
+      <text x="48" y="606" font-size="12">• Rate limits use memory:// — one process, by design (ADR-037).</text>
+    </g>
+  </g>
+</svg>

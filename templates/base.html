@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Static, URL-only machine-learning phishing website detection — final-year CS project.">
+  <meta name="color-scheme" content="dark light">
+  <title>{% block title %}{{ app_name }}{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/logo.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/backend.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+</head>
+<body class="pds-body">
+  <a class="pds-skip" href="#main-content">Skip to main content</a>
+
+  <nav class="pds-nav" aria-label="Primary navigation">
+    <div class="pds-container pds-nav-inner">
+      <a class="pds-brand" href="{{ url_for('core.index') }}">
+        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="" width="38" height="38">
+        <span>
+          Phishing Detection
+          <small>SOC console &middot; stage {{ build_stage }}/14</small>
+        </span>
+      </a>
+
+      <button class="pds-icon-button pds-toggler d-lg-none" type="button"
+              data-bs-toggle="collapse" data-bs-target="#primaryNav"
+              aria-controls="primaryNav" aria-expanded="false" aria-label="Toggle navigation">
+        &#9776;
+      </button>
+
+      <div class="collapse d-lg-block" id="primaryNav">
+        <div class="pds-nav-links">
+          <a class="pds-nav-link" data-nav-path="/" href="{{ url_for('core.index') }}">Overview</a>
+          <a class="pds-nav-link" data-nav-path="/scan" href="{{ url_for('scanning.scan_form') }}">Scan URL</a>
+          <a class="pds-nav-link" data-nav-path="/dashboard" href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+          <a class="pds-nav-link" data-nav-path="/history" href="{{ url_for('history.history') }}">History</a>
+          {% if current_user.is_authenticated and current_user.is_admin %}
+            <a class="pds-nav-link" data-nav-path="/admin" href="{{ url_for('admin.admin') }}">Admin</a>
+          {% endif %}
+          <a class="pds-nav-link" data-nav-path="/health" href="{{ url_for('core.health') }}">System health</a>
+          <a class="pds-nav-link" data-nav-path="/auth/session" href="{{ url_for('auth.session_state') }}">Session</a>
+          {% if current_user.is_authenticated %}
+            <span class="pds-user-chip pds-mono">{{ current_user.username }}</span>
+            <form method="post" action="{{ url_for('auth.logout') }}" class="d-inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="pds-logout-button" type="submit">Sign out</button>
+            </form>
+          {% else %}
+            <a class="pds-nav-link" data-nav-path="/login" href="{{ url_for('auth.login') }}">Sign in</a>
+            <a class="pds-btn" data-nav-path="/register" href="{{ url_for('auth.register') }}">Create account</a>
+          {% endif %}
+          <button class="pds-icon-button" id="themeToggle" type="button"
+                  aria-pressed="false" aria-label="Switch to light theme"
+                  title="Switch to light theme">
+            <span data-theme-icon aria-hidden="true">&#9728;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="pds-main" id="main-content">
+    <div class="pds-container">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="pds-banner" role="status">
+            <div><strong>Notice</strong>
+              {% for message in messages %}<p>{{ message }}</p>{% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <footer class="pds-footer">
+    <div class="pds-container pds-footer-inner">
+      <span>{{ app_name }} &middot; v{{ app_version }} &middot; STAGE {{ build_stage }} OF 14 &middot; {{ environment }}</span>
+      <span>Local assets only &middot; no CDN &middot; no outbound URL requests</span>
+    </div>
+  </footer>
+
+  <div id="pdsLiveRegion" class="visually-hidden" role="status" aria-live="polite"></div>
+
+  <script src="{{ url_for('static', filename='vendor/bootstrap.bundle.min.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='vendor/chart.umd.min.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

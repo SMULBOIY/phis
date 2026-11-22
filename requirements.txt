@@ -1,0 +1,48 @@
+# =============================================================================
+# Intelligent Phishing Website Detection System - pinned runtime dependencies
+# Stage 2 deliverable.
+#
+# Why exact pins? A final-year project must be reproducible: an examiner should
+# get the same library behaviour you did. All versions below were checked for
+# wheel availability on Python 3.10, 3.11, 3.12 and 3.13 (see docs/ENVIRONMENT.md).
+#
+# Install:  python -m pip install -r requirements.txt
+# Verify :  python -m pip check
+#           python scripts/verify_stage2.py
+#
+# Python requirement: >= 3.10, <= 3.13 (3.12 or 3.13 recommended on Windows).
+# XGBoost is intentionally NOT required; the brief lists it as optional.
+# =============================================================================
+
+# --- Web framework (Stage 7) -------------------------------------------------
+Flask==3.1.3
+Werkzeug==3.1.9          # secure password hashing + WSGI utilities
+Jinja2==3.1.6            # autoescaping templates (XSS defence)
+itsdangerous==2.2.0      # signed session cookies
+click==8.5.0             # Flask CLI
+blinker==1.9.0           # Flask signal support
+
+# --- Database (Stage 8) ------------------------------------------------------
+Flask-SQLAlchemy==3.1.1
+SQLAlchemy==2.0.55       # ORM, bound parameters (SQL-injection defence)
+
+# --- Forms, validation, authentication, CSRF, rate limiting (Stages 7/12) ----
+Flask-WTF==1.3.0
+WTForms==3.2.2
+email-validator==2.3.0
+Flask-Login==0.6.3
+Flask-Limiter==3.12
+limits==3.14.1
+
+# --- Configuration / secrets (Stage 2) --------------------------------------
+python-dotenv==1.2.4
+
+# --- Machine learning (Stages 3-6) -------------------------------------------
+numpy==2.2.6
+pandas==2.3.3
+scikit-learn==1.6.1      # Logistic Regression, Decision Tree, Random Forest
+joblib==1.5.3            # model persistence
+
+# --- Testing (Stage 13) and production WSGI server (Stage 14) ----------------
+pytest==9.0.3
+waitress==3.0.2          # pure-Python WSGI server, works on Windows and Linux

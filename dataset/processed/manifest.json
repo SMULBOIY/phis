@@ -1,0 +1,285 @@
+{
+  "schema_version": "1.0",
+  "generated_at_utc": "2026-11-03T19:32:10+00:00",
+  "stage": 3,
+  "dataset": {
+    "name": "PhiUSIIL Phishing URL (Website)",
+    "source": "UCI Machine Learning Repository, dataset 967",
+    "input_file": "dataset/raw/PhiUSIIL_Phishing_URL_Dataset.csv",
+    "source_columns": [
+      "FILENAME",
+      "URL",
+      "URLLength",
+      "Domain",
+      "DomainLength",
+      "IsDomainIP",
+      "TLD",
+      "URLSimilarityIndex",
+      "CharContinuationRate",
+      "TLDLegitimateProb",
+      "URLCharProb",
+      "TLDLength",
+      "NoOfSubDomain",
+      "HasObfuscation",
+      "NoOfObfuscatedChar",
+      "ObfuscationRatio",
+      "NoOfLettersInURL",
+      "LetterRatioInURL",
+      "NoOfDegitsInURL",
+      "DegitRatioInURL",
+      "NoOfEqualsInURL",
+      "NoOfQMarkInURL",
+      "NoOfAmpersandInURL",
+      "NoOfOtherSpecialCharsInURL",
+      "SpacialCharRatioInURL",
+      "IsHTTPS",
+      "LineOfCode",
+      "LargestLineLength",
+      "HasTitle",
+      "Title",
+      "DomainTitleMatchScore",
+      "URLTitleMatchScore",
+      "HasFavicon",
+      "Robots",
+      "IsResponsive",
+      "NoOfURLRedirect",
+      "NoOfSelfRedirect",
+      "HasDescription",
+      "NoOfPopup",
+      "NoOfiFrame",
+      "HasExternalFormSubmit",
+      "HasSocialNet",
+      "HasSubmitButton",
+      "HasHiddenFields",
+      "HasPasswordField",
+      "Bank",
+      "Pay",
+      "Crypto",
+      "HasCopyrightInfo",
+      "NoOfImage",
+      "NoOfCSS",
+      "NoOfJS",
+      "NoOfSelfRef",
+      "NoOfEmptyRef",
+      "NoOfExternalRef",
+      "label"
+    ],
+    "source_column_count": 56,
+    "columns_used": [
+      "URL",
+      "label"
+    ],
+    "columns_dropped": [
+      "FILENAME",
+      "URLLength",
+      "Domain",
+      "DomainLength",
+      "IsDomainIP",
+      "TLD",
+      "URLSimilarityIndex",
+      "CharContinuationRate",
+      "TLDLegitimateProb",
+      "URLCharProb",
+      "TLDLength",
+      "NoOfSubDomain",
+      "HasObfuscation",
+      "NoOfObfuscatedChar",
+      "ObfuscationRatio",
+      "NoOfLettersInURL",
+      "LetterRatioInURL",
+      "NoOfDegitsInURL",
+      "DegitRatioInURL",
+      "NoOfEqualsInURL",
+      "NoOfQMarkInURL",
+      "NoOfAmpersandInURL",
+      "NoOfOtherSpecialCharsInURL",
+      "SpacialCharRatioInURL",
+      "IsHTTPS",
+      "LineOfCode",
+      "LargestLineLength",
+      "HasTitle",
+      "Title",
+      "DomainTitleMatchScore",
+      "URLTitleMatchScore",
+      "HasFavicon",
+      "Robots",
+      "IsResponsive",
+      "NoOfURLRedirect",
+      "NoOfSelfRedirect",
+      "HasDescription",
+      "NoOfPopup",
+      "NoOfiFrame",
+      "HasExternalFormSubmit",
+      "HasSocialNet",
+      "HasSubmitButton",
+      "HasHiddenFields",
+      "HasPasswordField",
+      "Bank",
+      "Pay",
+      "Crypto",
+      "HasCopyrightInfo",
+      "NoOfImage",
+      "NoOfCSS",
+      "NoOfJS",
+      "NoOfSelfRef",
+      "NoOfEmptyRef",
+      "NoOfExternalRef"
+    ],
+    "source_row_count": 235795,
+    "sha256": "a236549cd369cd80bd478ff8e1779cbf44c58d5c3f79f7a51a1adbed7d06d1c6",
+    "file_size_bytes": 56854345
+  },
+  "label_encoding": {
+    "source_meaning": {
+      "1": "legitimate",
+      "0": "phishing"
+    },
+    "project_meaning": {
+      "0": "legitimate",
+      "1": "phishing"
+    },
+    "mapping_applied": {
+      "1": 0,
+      "0": 1
+    }
+  },
+  "parameters": {
+    "ratios": {
+      "train": 0.7,
+      "validation": 0.15,
+      "test": 0.15
+    },
+    "seed": 42,
+    "max_template_domains": 20,
+    "max_url_length": 2048,
+    "url_column": "URL",
+    "label_column": "label"
+  },
+  "accounting": {
+    "raw_rows": 235795,
+    "after_missing_removed": 235795,
+    "after_unknown_labels_removed": 235795,
+    "after_invalid_urls_removed": 235787,
+    "label_encoded_rows": 235787,
+    "conflicting_label_urls": 0,
+    "conflicting_rows_removed": 0,
+    "after_conflicts_removed": 235787,
+    "exact_duplicates_removed": 439,
+    "clean_rows": 235348
+  },
+  "grouping": {
+    "method": "union-find over registrable domain + non-generic path signature",
+    "max_template_domains": 20,
+    "distinct_domains": 179488,
+    "distinct_path_signatures": 13885,
+    "generic_signatures_excluded": 44,
+    "rows_with_generic_signature": 211719,
+    "group_count": 177201,
+    "largest_group_size": 23675,
+    "singleton_group_count": 171285
+  },
+  "split": {
+    "ratios": {
+      "train": 0.7,
+      "validation": 0.15,
+      "test": 0.15
+    },
+    "seed": 42,
+    "balance_tolerance": 0.01,
+    "balance_swaps": 11310,
+    "overall_phishing_rate": 0.427019,
+    "target_counts": {
+      "train": {
+        "size": 164743.6,
+        "legitimate": 94395.0,
+        "phishing": 70348.6
+      },
+      "validation": {
+        "size": 35302.2,
+        "legitimate": 20227.5,
+        "phishing": 15074.7
+      },
+      "test": {
+        "size": 35302.2,
+        "legitimate": 20227.5,
+        "phishing": 15074.7
+      }
+    },
+    "actual_counts": {
+      "train": {
+        "size": 164744,
+        "legitimate": 93690,
+        "phishing": 71054
+      },
+      "validation": {
+        "size": 35302,
+        "legitimate": 20580,
+        "phishing": 14722
+      },
+      "test": {
+        "size": 35302,
+        "legitimate": 20580,
+        "phishing": 14722
+      }
+    },
+    "actual_phishing_rate": {
+      "train": 0.431299,
+      "validation": 0.41703,
+      "test": 0.41703
+    }
+  },
+  "class_distribution": [
+    {
+      "split": "all_clean",
+      "total": 235348,
+      "legitimate": 134850,
+      "phishing": 100498,
+      "legitimate_pct": 57.298,
+      "phishing_pct": 42.702
+    },
+    {
+      "split": "train",
+      "total": 164744,
+      "legitimate": 93690,
+      "phishing": 71054,
+      "legitimate_pct": 56.87,
+      "phishing_pct": 43.13
+    },
+    {
+      "split": "validation",
+      "total": 35302,
+      "legitimate": 20580,
+      "phishing": 14722,
+      "legitimate_pct": 58.297,
+      "phishing_pct": 41.703
+    },
+    {
+      "split": "test",
+      "total": 35302,
+      "legitimate": 20580,
+      "phishing": 14722,
+      "legitimate_pct": 58.297,
+      "phishing_pct": 41.703
+    }
+  ],
+  "leakage_report": {
+    "groups_in_multiple_splits": 0,
+    "urls_in_multiple_splits": 0,
+    "non_generic_signatures_in_multiple_splits": 0,
+    "generic_signatures_allowed_across_splits": 44,
+    "total_rows_in_splits": 235348,
+    "source_rows_before_split": 235348,
+    "labels_are_binary": true,
+    "leakage_free": true
+  },
+  "output_files": [
+    "train.csv",
+    "validation.csv",
+    "test.csv",
+    "class_distribution.csv"
+  ],
+  "environment": {
+    "python": "3.13.16",
+    "pandas": "2.3.3"
+  }
+}

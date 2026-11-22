@@ -1,0 +1,128 @@
+{
+  "stage": 5,
+  "generated_at_utc": "2026-11-03T20:13:26+00:00",
+  "description": "Three fitted candidate pipelines. No evaluation, selection or threshold calibration performed.",
+  "schema_version": "1.0",
+  "model_version": "0.5.0-candidate",
+  "dataset": {
+    "train_file": "/home/user/phishing-detection-system/dataset/processed/train.csv",
+    "train_file_sha256": "bdb7ba6bb2a8118c04cd8bf6b06a3b733a8d7e58003b29159c6c8cecad9d0734",
+    "rows": 164744,
+    "legitimate_rows": 93690,
+    "phishing_rows": 71054,
+    "phishing_rate": 0.431299,
+    "feature_count": 15,
+    "feature_order": [
+      "url_length",
+      "domain_length",
+      "num_dots",
+      "num_hyphens",
+      "num_special_chars",
+      "num_digits",
+      "has_ip_address",
+      "has_at_symbol",
+      "has_suspicious_pattern",
+      "num_subdomains",
+      "has_https",
+      "is_shortened",
+      "num_suspicious_words",
+      "has_unusual_port",
+      "has_encoded_chars"
+    ],
+    "splits_used": [
+      "train"
+    ],
+    "held_out_splits_not_read": true
+  },
+  "config": {
+    "train_path": "/home/user/phishing-detection-system/dataset/processed/train.csv",
+    "output_dir": "/home/user/phishing-detection-system/ml/saved_model/candidates",
+    "seed": 42,
+    "n_estimators": 100,
+    "max_depth": 12,
+    "min_samples_leaf": 10,
+    "lr_max_iter": 1000
+  },
+  "feature_contract": {
+    "count": 15,
+    "feature_order": [
+      "url_length",
+      "domain_length",
+      "num_dots",
+      "num_hyphens",
+      "num_special_chars",
+      "num_digits",
+      "has_ip_address",
+      "has_at_symbol",
+      "has_suspicious_pattern",
+      "num_subdomains",
+      "has_https",
+      "is_shortened",
+      "num_suspicious_words",
+      "has_unusual_port",
+      "has_encoded_chars"
+    ],
+    "source": "ml.feature_extraction.FEATURE_ORDER (Stage 4)"
+  },
+  "models": {
+    "logistic_regression": {
+      "file": "/home/user/phishing-detection-system/ml/saved_model/candidates/logistic_regression.joblib",
+      "size_bytes": 1807,
+      "sha256": "49cee8b00e2926f0adcb6fb0cc7df463bc95146cc7eb3f36e1185237e71e778d",
+      "training_seconds": 1.175,
+      "hyperparameters": {
+        "random_state": 42,
+        "class_weight": null,
+        "steps": [
+          "StandardScaler",
+          "LogisticRegression"
+        ],
+        "solver": "lbfgs",
+        "max_iter": 1000
+      }
+    },
+    "decision_tree": {
+      "file": "/home/user/phishing-detection-system/ml/saved_model/candidates/decision_tree.joblib",
+      "size_bytes": 15250,
+      "sha256": "7f6ca9457a86f84270e8f6cd6cb47d43592fbd3d8fefd579f59b1082a20379cf",
+      "training_seconds": 0.155,
+      "hyperparameters": {
+        "random_state": 42,
+        "class_weight": null,
+        "steps": [
+          "DecisionTreeClassifier"
+        ],
+        "max_depth": 12,
+        "min_samples_leaf": 10
+      }
+    },
+    "random_forest": {
+      "file": "/home/user/phishing-detection-system/ml/saved_model/candidates/random_forest.joblib",
+      "size_bytes": 834540,
+      "sha256": "8f0b62c74e9490155205ae73d182986e0aa82e4624df32c149d547b26e165c53",
+      "training_seconds": 4.165,
+      "hyperparameters": {
+        "random_state": 42,
+        "class_weight": null,
+        "steps": [
+          "RandomForestClassifier"
+        ],
+        "n_estimators": 100,
+        "max_depth": 12,
+        "min_samples_leaf": 10,
+        "n_jobs": 1
+      }
+    }
+  },
+  "environment": {
+    "python": "3.13.16",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "scikit_learn": "1.6.1",
+    "joblib": "1.5.3"
+  },
+  "evaluation_performed": false,
+  "selection_performed": false,
+  "metrics_measured": [],
+  "next_stage": "Stage 6 measures accuracy, precision, recall, F1, confusion matrix and ROC-AUC, then selects a model."
+}

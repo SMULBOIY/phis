@@ -1,0 +1,10 @@
+{
+  "groups_in_multiple_splits": 0,
+  "urls_in_multiple_splits": 0,
+  "non_generic_signatures_in_multiple_splits": 0,
+  "generic_signatures_allowed_across_splits": 44,
+  "total_rows_in_splits": 235348,
+  "source_rows_before_split": 235348,
+  "labels_are_binary": true,
+  "leakage_free": true
+}

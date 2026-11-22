@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1010" viewBox="0 0 1440 1010" role="img" aria-label="Layered system architecture: online runtime path and offline training pipeline sharing one feature extractor">
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#101d30" stroke-width="1"/>
+    </pattern>
+    <style>
+      text { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+      .title { fill:#e8f4ff; font-size:26px; font-weight:700; }
+      .sub { fill:#7f9bb8; font-size:13.5px; }
+      .lane { fill:#0a1424; stroke:#1b304a; stroke-width:1.5; }
+      .lanet { fill:#22d3ee; font-size:13px; font-weight:700; letter-spacing:1.4px; }
+      .box { fill:#101f33; stroke:#24435f; stroke-width:1.4; }
+      .bt { fill:#e7f1ff; font-size:14.5px; font-weight:700; }
+      .bs { fill:#a3bcd5; font-size:12.3px; }
+      .bn { fill:#7089a6; font-size:11.4px; }
+      .step { fill:#f0b429; font-size:10.5px; font-weight:700; letter-spacing:0.5px; }
+      .pill-r { fill:#0c2b3a; stroke:#22d3ee; stroke-width:1.2; }
+      .pill-o { fill:#33260a; stroke:#f0b429; stroke-width:1.2; }
+      .pill-g { fill:#0c2f22; stroke:#34d399; stroke-width:1.2; }
+      .pill-t { font-size:10.5px; font-weight:700; letter-spacing:1.2px; }
+      .shared { fill:#0c2f22; stroke:#34d399; stroke-width:1.2; }
+      .shared-t { fill:#6ee7b7; font-size:9.5px; font-weight:700; letter-spacing:1px; }
+      .notebox { fill:#1c1708; stroke:#f0b429; stroke-width:1.2; }
+      .note { fill:#f7dc9a; font-size:12px; }
+      .foot { fill:#8aa5c0; font-size:11.6px; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="1010" fill="#070c17"/>
+  <rect width="1440" height="1010" fill="url(#grid)"/>
+
+  <text x="36" y="38" class="title">Intelligent Phishing Website Detection System</text>
+  <text x="36" y="64" class="sub">STAGE 1 / SYSTEM ARCHITECTURE — two pipelines, one shared feature extractor, zero outbound network requests</text>
+
+  <rect x="1010" y="30" width="104" height="26" rx="13" class="pill-r"/>
+  <text x="1026" y="47" class="pill-t" fill="#22d3ee">RUNTIME</text>
+  <rect x="1124" y="30" width="104" height="26" rx="13" class="pill-o"/>
+  <text x="1141" y="47" class="pill-t" fill="#f0b429">OFFLINE</text>
+  <rect x="1238" y="30" width="104" height="26" rx="13" class="pill-g"/>
+  <text x="1256" y="47" class="pill-t" fill="#34d399">SHARED</text>
+
+  <rect x="36" y="96" width="872" height="850" rx="12" class="lane"/>
+  <text x="60" y="124" class="lanet">ONLINE RUNTIME PATH — ONE SYNCHRONOUS REQUEST</text>
+  <rect x="932" y="96" width="472" height="850" rx="12" class="lane"/>
+  <text x="956" y="124" class="lanet">OFFLINE TRAINING — DEVELOPER ONLY</text>
+
+  <!-- LEFT: client -->
+  <rect x="60" y="140" width="824" height="88" rx="10" class="box"/>
+  <text x="80" y="168" class="bt">1  CLIENTS</text>
+  <text x="80" y="191" class="bs">Browser (Jinja HTML, CSS, JS, Chart.js) and REST client (JSON)</text>
+  <text x="80" y="211" class="bn">Actors: guest, registered user, administrator, offline operator</text>
+
+  <!-- LEFT: edge -->
+  <rect x="60" y="258" width="824" height="88" rx="10" class="box"/>
+  <text x="80" y="286" class="bt">2  SECURITY EDGE / MIDDLEWARE</text>
+  <text x="80" y="309" class="bs">Rate limit → CSRF → session auth → security headers → length and scheme caps</text>
+  <text x="80" y="329" class="bn">Trust boundary 1: untrusted input becomes a bounded, validated string</text>
+
+  <!-- LEFT: HTTP -->
+  <rect x="60" y="376" width="824" height="88" rx="10" class="box"/>
+  <text x="80" y="404" class="bt">3  HTTP LAYER — FLASK APP FACTORY + BLUEPRINTS</text>
+  <text x="80" y="427" class="bs">routes/: scanning · api · auth · dashboard · admin · reports</text>
+  <text x="80" y="447" class="bn">Parse, authorize, delegate, render. No business logic here.</text>
+
+  <!-- LEFT: services -->
+  <rect x="60" y="494" width="824" height="88" rx="10" class="box"/>
+  <text x="80" y="522" class="bt">4  DOMAIN / SERVICE LAYER</text>
+  <text x="80" y="545" class="bs">URL validator + normaliser → DetectionService → DecisionLayer → ExplanationService</text>
+  <text x="80" y="565" class="bn">StatsService · ReportService · AuthService — reused by the web form and the JSON API</text>
+
+  <!-- LEFT: ML -->
+  <rect x="60" y="612" width="824" height="88" rx="10" class="box"/>
+  <text x="80" y="640" class="bt">5  ML INFERENCE — SHARED CONTRACT</text>
+  <text x="80" y="663" class="bs">ml/feature_extraction.py (FEATURE_ORDER, 15 features) → models/prediction_model.py</text>
+  <text x="80" y="683" class="bn">Loads model_bundle.joblib + metadata.json; predict_proba only; fails loudly on mismatch</text>
+  <rect x="790" y="620" width="74" height="20" rx="10" class="shared"/>
+  <text x="802" y="634" class="shared-t">SHARED</text>
+
+  <!-- LEFT: data -->
+  <rect x="60" y="730" width="824" height="88" rx="10" class="box"/>
+  <text x="80" y="758" class="bt">6  DATA LAYER — SQLALCHEMY ORM</text>
+  <text x="80" y="781" class="bs">models/database_models.py: User · ScanHistory · ModelInformation</text>
+  <text x="80" y="801" class="bn">SQLite instance/phishing.db — bound parameters, hashed passwords only</text>
+
+  <!-- RIGHT: raw -->
+  <rect x="956" y="140" width="424" height="88" rx="10" class="box"/>
+  <text x="974" y="168" class="bt">A  RAW DATA</text>
+  <text x="974" y="191" class="bs">dataset/raw/ + docs/DATASET.md</text>
+  <text x="974" y="211" class="bn">Real cited labelled CSV; source and date recorded</text>
+
+  <!-- RIGHT: preprocess -->
+  <rect x="956" y="258" width="424" height="88" rx="10" class="box"/>
+  <text x="974" y="286" class="bt">B  PREPROCESS</text>
+  <text x="974" y="309" class="bs">ml/preprocess.py: dedup, clean, encode labels</text>
+  <text x="974" y="329" class="bn">Group-aware train / validation / test split</text>
+
+  <!-- RIGHT: features -->
+  <rect x="956" y="376" width="424" height="88" rx="10" class="box"/>
+  <text x="974" y="404" class="bt">C  FEATURES (SHARED)</text>
+  <text x="974" y="427" class="bs">ml/feature_extraction.py — SAME module</text>
+  <text x="974" y="447" class="bn">Identical column order as runtime inference</text>
+  <rect x="1300" y="384" width="70" height="20" rx="10" class="shared"/>
+  <text x="1312" y="398" class="shared-t">SHARED</text>
+
+  <!-- RIGHT: train -->
+  <rect x="956" y="494" width="424" height="88" rx="10" class="box"/>
+  <text x="974" y="522" class="bt">D  TRAIN</text>
+  <text x="974" y="545" class="bs">ml/train_model.py: LR · DT · RF pipelines</text>
+  <text x="974" y="565" class="bn">Fit on the training split only</text>
+
+  <!-- RIGHT: evaluate -->
+  <rect x="956" y="612" width="424" height="88" rx="10" class="box"/>
+  <text x="974" y="640" class="bt">E  EVALUATE + CALIBRATE</text>
+  <text x="974" y="663" class="bs">Accuracy · precision · recall · F1</text>
+  <text x="974" y="683" class="bn">Confusion matrix · ROC-AUC · threshold tuning</text>
+
+  <!-- RIGHT: artefacts -->
+  <rect x="956" y="730" width="424" height="88" rx="10" class="box"/>
+  <text x="974" y="758" class="bt">F  ARTEFACTS</text>
+  <text x="974" y="781" class="bs">bundle.joblib · metadata.json · metrics.json</text>
+  <text x="974" y="801" class="bn">Training writes one ModelInformation row</text>
+
+  <!-- LEFT flow arrows: line + polygon arrowheads (portable across SVG renderers) -->
+  <line x1="472" y1="230" x2="472" y2="248" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="466,248 478,248 472,257" fill="#38bdf8"/>
+  <text x="492" y="247" class="step">1  SUBMIT URL</text>
+
+  <line x1="472" y1="348" x2="472" y2="366" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="466,366 478,366 472,375" fill="#38bdf8"/>
+  <text x="492" y="365" class="step">2  VALIDATED STRING</text>
+
+  <line x1="472" y1="466" x2="472" y2="484" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="466,484 478,484 472,493" fill="#38bdf8"/>
+  <text x="492" y="483" class="step">3  DELEGATE</text>
+
+  <line x1="472" y1="584" x2="472" y2="602" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="466,602 478,602 472,611" fill="#38bdf8"/>
+  <text x="492" y="601" class="step">4  FEATURE VECTOR → MODEL SCORE</text>
+
+  <line x1="472" y1="702" x2="472" y2="720" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="466,720 478,720 472,729" fill="#38bdf8"/>
+  <text x="492" y="719" class="step">5  PERSIST SCAN</text>
+
+  <!-- RIGHT flow arrows -->
+  <line x1="1168" y1="230" x2="1168" y2="248" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="1162,248 1174,248 1168,257" fill="#38bdf8"/>
+  <text x="1188" y="247" class="step">CLEAN</text>
+
+  <line x1="1168" y1="348" x2="1168" y2="366" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="1162,366 1174,366 1168,375" fill="#38bdf8"/>
+  <text x="1188" y="365" class="step">SPLIT</text>
+
+  <line x1="1168" y1="466" x2="1168" y2="484" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="1162,484 1174,484 1168,493" fill="#38bdf8"/>
+  <text x="1188" y="483" class="step">FIT</text>
+
+  <line x1="1168" y1="584" x2="1168" y2="602" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="1162,602 1174,602 1168,611" fill="#38bdf8"/>
+  <text x="1188" y="601" class="step">SCORE</text>
+
+  <line x1="1168" y1="702" x2="1168" y2="720" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="1162,720 1174,720 1168,729" fill="#38bdf8"/>
+  <text x="1188" y="719" class="step">SAVE</text>
+
+  <!-- Offline artefacts feed the online loader -->
+  <line x1="956" y1="774" x2="920" y2="774" stroke="#f0b429" stroke-width="2"/>
+  <line x1="920" y1="774" x2="920" y2="660" stroke="#f0b429" stroke-width="2"/>
+  <line x1="920" y1="660" x2="894" y2="660" stroke="#f0b429" stroke-width="2"/>
+  <polygon points="894,654 894,666 885,660" fill="#f0b429"/>
+
+  <!-- Explanatory notes in the empty lower lane areas -->
+  <text x="80" y="852" class="foot">Decision layer: p = P(phishing | URL features) → T_low / T_high → LEGITIMATE · SUSPICIOUS · PHISHING</text>
+  <text x="80" y="874" class="foot">F feeds the trained bundle into box 5; C and box 5 import the SAME ml/feature_extraction.py module.</text>
+  <text x="80" y="896" class="foot">Model score is an uncalibrated estimate, never a guaranteed probability of maliciousness.</text>
+  <text x="974" y="852" class="foot">Measured metrics go to metrics.json and one</text>
+  <text x="974" y="874" class="foot">ModelInformation row. No number is</text>
+  <text x="974" y="896" class="foot">hard-coded in any template.</text>
+
+  <!-- Footer note -->
+  <rect x="36" y="956" width="1368" height="46" rx="8" class="notebox"/>
+  <text x="56" y="976" class="note">SAFETY BOUNDARY  |  The backend never fetches, resolves or executes a submitted URL — static lexical + ML analysis only (SSRF-safe).</text>
+  <text x="56" y="994" class="note">REPRODUCIBILITY  |  ml/feature_extraction.py is the SAME module in both lanes. No dataset, trained model or measured metric exists yet — Stage 1 is design only.</text>
+</svg>

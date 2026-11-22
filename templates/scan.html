@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Scan a URL &middot; {{ app_name }}{% endblock %}
+{% block content %}
+
+<section class="pds-hero pds-hero-compact" aria-labelledby="scanHeading">
+  <p class="pds-eyebrow">STAGE {{ build_stage }} OF 14 &middot; LIVE DETECTION ENGINE</p>
+  <h1 id="scanHeading">Scan a <span>website URL</span>.</h1>
+  <p class="pds-lead">
+    Submit a complete <code>http://</code> or <code>https://</code> address. The
+    trained model classifies its <strong>text characteristics only</strong> —
+    the server never opens, resolves or executes the address.
+  </p>
+</section>
+
+<section class="pds-section" aria-labelledby="formHeading" id="scan-form">
+  <div class="pds-section-head">
+    <h2 id="formHeading">Submit a URL</h2>
+    <p>One bounded string, one real model score, one saved audit record.</p>
+  </div>
+
+  {% if not engine_ready %}
+    <div class="pds-banner pds-banner-warn" role="alert">
+      <span class="pds-pill">ENGINE UNAVAILABLE</span>
+      <div>
+        <strong>Detection is not accepting submissions.</strong>
+        <p>
+          The hash-verified model bundle or its measured provenance could not be
+          loaded. The application will refuse to guess: there is no rule-based
+          fallback and no fabricated score. Restore
+          <code>ml/saved_model/model_bundle.joblib</code> and
+          <code>ml/saved_model/metrics.json</code>, then restart.
+        </p>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if form_error %}
+    <div class="pds-banner pds-banner-warn" role="alert">
+      <span class="pds-pill">INVALID INPUT</span>
+      <div><strong>The URL was rejected.</strong><p>{{ form_error }}</p></div>
+    </div>
+  {% endif %}
+
+  <article class="pds-card pds-scan-card">
+    <form method="post" action="{{ url_for('scanning.scan') }}" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label class="pds-field-label" for="urlInput">Website URL</label>
+      <div class="pds-input-row">
+        <input class="pds-input" type="url" id="urlInput" name="url"
+               placeholder="https://example.com/login" required
+               maxlength="{{ max_url_length }}" autocomplete="off"
+               spellcheck="false" aria-describedby="urlHelp">
+        <button class="pds-btn pds-btn-primary" type="submit">SCAN WEBSITE</button>
+      </div>
+      <p class="pds-card-note" id="urlHelp">
+        Maximum {{ max_url_length }} characters. Only http and https are
+        accepted. Guest scans are allowed; signed-in scans are linked to your
+        account. No network request is made to the submitted host.
+      </p>
+    </form>
+  </article>
+
+  <div class="pds-policy-row">
+    <article class="pds-card">
+      <p class="pds-card-label">Deployed estimator</p>
+      <p class="pds-card-value pds-mono">{{ model_name }} v{{ model_version }}</p>
+      <p class="pds-card-note">Hash-verified Joblib bundle &middot; {{ feature_count }} shared lexical features</p>
+    </article>
+    <article class="pds-card">
+      <p class="pds-card-label">Measured decision thresholds</p>
+      <p class="pds-card-value pds-mono">{{ thresholds.low }} / {{ thresholds.high }}</p>
+      <p class="pds-card-note">SUSPICIOUS abstention band: {{ band }}</p>
+    </article>
+    <article class="pds-card">
+      <p class="pds-card-label">Audit database</p>
+      <p class="pds-card-value">{{ db_status.status|upper }}</p>
+      <p class="pds-card-note">Every result is written to scan_history before it is shown</p>
+    </article>
+  </div>
+</section>
+
+{% if result %}
+  {% include "partials/scan_result.html" %}
+{% endif %}
+
+<section class="pds-section" aria-labelledby="limitsHeading">
+  <div class="pds-banner">
+    <span class="pds-pill pds-pill-ok">SAFETY NOTICE</span>
+    <div>
+      <strong>A score is not a safety certificate.</strong>
+      <p>
+        HTTPS alone does not mean a website is legitimate. This system only
+        reads the URL string: it cannot see page content, redirects,
+        certificates or live behaviour. Treat an uncertain result as
+        unresolved and verify the sender independently.
+      </p>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+# --- Secrets and environment ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# --- Database (SQLite lives in instance/, never in git) ---
+instance/*.db
+instance/*.sqlite
+instance/*.sqlite3
+*.db
+*.log
+
+# --- Model artefacts: binary bundle is reproducible from training; metrics are committed ---
+ml/saved_model/*.joblib
+
+# --- Raw datasets: often large and licence-restricted; provenance is in docs/DATASET.md ---
+dataset/raw/*.csv
+dataset/raw/*.json
+dataset/raw/*.zip
+
+# --- Build / editor / OS ---
+build/
+dist/
+.idea/
+.DS_Store
+Thumbs.db

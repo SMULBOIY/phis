@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Sign in &middot; {{ app_name }}{% endblock %}
+{% block content %}
+
+<div class="pds-auth-shell">
+  <section class="pds-auth-card" aria-labelledby="loginHeading">
+    <p class="pds-eyebrow">SIGN IN &middot; SECURE SESSION</p>
+    <h1 id="loginHeading">Welcome back</h1>
+    <p class="pds-lead">
+      Sign in to associate future scans with your account. Guest scanning
+      remains available without an account.
+    </p>
+
+    {% if problems %}
+      <ul class="pds-problems" role="alert">
+        {% for item in problems %}<li>{{ item }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+
+    <form method="post" action="{{ action }}" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ token }}">
+      <div class="pds-field">
+        <label class="pds-label" for="username">Username or email</label>
+        <input class="pds-input" id="username" name="username" type="text"
+               maxlength="254" autocomplete="username" required
+               placeholder="name@example.com">
+      </div>
+      <div class="pds-field">
+        <label class="pds-label" for="password">Password</label>
+        <input class="pds-input" id="password" name="password" type="password"
+               maxlength="128" autocomplete="current-password" required
+               placeholder="Your password">
+      </div>
+      <button class="pds-btn pds-auth-submit" type="submit">SIGN IN</button>
+    </form>
+
+    <p class="pds-auth-switch">
+      {{ switch_text }} <a href="{{ switch_url }}">{{ switch_label }}</a>
+    </p>
+    <p class="pds-security-note">
+      Passwords are hashed with scrypt and never stored in plaintext. A fresh
+      signed session is created on success. Submitting JSON to this same URL
+      returns JSON instead of HTML.
+    </p>
+  </section>
+</div>
+
+{% endblock %}

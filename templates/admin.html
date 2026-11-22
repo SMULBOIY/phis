@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}Admin console &middot; {{ app_name }}{% endblock %}
+{% block content %}
+
+<section class="pds-hero pds-hero-compact" aria-labelledby="adminHeading">
+  <p class="pds-eyebrow">STAGE {{ build_stage }} OF 14 &middot; ADMIN ONLY</p>
+  <h1 id="adminHeading">Admin <span>console</span>.</h1>
+  <p class="pds-lead">
+    Account audit, measured model provenance and a full CSV export. Ordinary
+    users receive <code>403 FORBIDDEN</code>; anonymous visitors receive the
+    documented <code>401 UNAUTHENTICATED</code> response.
+  </p>
+  <div class="pds-actions">
+    <a class="pds-btn" href="{{ url_for('admin.export_all_csv') }}">Export all scans (CSV)</a>
+    <a class="pds-btn pds-btn-ghost" href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+    <a class="pds-btn pds-btn-ghost" href="{{ url_for('history.history') }}">My history</a>
+  </div>
+</section>
+
+<section class="pds-section" aria-labelledby="adminCountsHeading">
+  <div class="pds-section-head">
+    <h2 id="adminCountsHeading">System counts</h2>
+    <p>Live SQL counts, never cached or typed into the page.</p>
+  </div>
+  <div class="pds-kpi-grid">
+    <article class="pds-card"><p class="pds-card-label">Registered users</p><p class="pds-card-value pds-mono">{{ counts.users }}</p><p class="pds-card-note">All accounts</p></article>
+    <article class="pds-card"><p class="pds-card-label">Administrators</p><p class="pds-card-value pds-mono">{{ counts.admins }}</p><p class="pds-card-note">Created by scripts/create_admin.py</p></article>
+    <article class="pds-card"><p class="pds-card-label">Scan rows</p><p class="pds-card-value pds-mono">{{ counts.scans }}</p><p class="pds-card-note">Guest and linked scans</p></article>
+    <article class="pds-card"><p class="pds-card-label">Model audit rows</p><p class="pds-card-value pds-mono">{{ counts.model_rows }}</p><p class="pds-card-note">Seeded from measured artefacts</p></article>
+  </div>
+</section>
+
+<section class="pds-section" aria-labelledby="accountsHeading">
+  <div class="pds-section-head">
+    <h2 id="accountsHeading">Accounts</h2>
+    <p>
+      Projected with <code>User.to_dict()</code>. Password hashes are never
+      selected, rendered or exported; only scrypt hashes exist in the database.
+    </p>
+  </div>
+  {% if not accounts %}
+    <article class="pds-card pds-empty-state">
+      <p class="pds-card-label">No accounts yet</p>
+      <p>Registration creates normal users. Create an administrator with <code>python scripts\create_admin.py</code>.</p>
+    </article>
+  {% else %}
+    <div class="pds-table-wrap">
+      <table class="pds-table">
+        <thead>
+          <tr><th scope="col">ID</th><th scope="col">Username</th><th scope="col">Email</th>
+              <th scope="col">Role</th><th scope="col">Active</th><th scope="col">Scans</th>
+              <th scope="col">Created (UTC)</th><th scope="col">Last login (UTC)</th></tr>
+        </thead>
+        <tbody>
+          {% for account in accounts %}
+          <tr>
+            <td class="pds-mono">{{ account.id }}</td>
+            <td>{{ account.username }}</td>
+            <td>{{ account.email }}</td>
+            <td><span class="pds-badge {{ 'pds-badge-phishing' if account.role == 'admin' else 'pds-badge-legitimate' }}">{{ account.role }}</span></td>
+            <td class="pds-mono">{{ 'yes' if account.active else 'no' }}</td>
+            <td class="pds-mono">{{ account.scan_count }}</td>
+            <td class="pds-mono pds-small-value">{{ account.created_at }}</td>
+            <td class="pds-mono pds-small-value">{{ account.last_login_at or 'never' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+</section>
+
+<section class="pds-section" aria-labelledby="modelRowsHeading">
+  <div class="pds-section-head">
+    <h2 id="modelRowsHeading">Model information (database audit rows)</h2>
+    <p>
+      Copied from <code>ml/saved_model/metrics.json</code> and
+      <code>metadata.json</code> by <code>scripts/init_db.py</code>. No figure
+      here is estimated.
+    </p>
+  </div>
+  {% if not model_rows %}
+    <article class="pds-card pds-empty-state">
+      <p class="pds-card-label">No model audit row</p>
+      <p>Run <code>python scripts\init_db.py</code> to seed measured model information.</p>
+    </article>
+  {% else %}
+    <div class="pds-table-wrap">
+      <table class="pds-table">
+        <thead>
+          <tr><th scope="col">Model</th><th scope="col">Version</th><th scope="col">Training date (UTC)</th>
+              <th scope="col">Accuracy</th><th scope="col">Precision</th><th scope="col">Recall</th>
+              <th scope="col">F1</th><th scope="col">ROC-AUC</th><th scope="col">Features</th><th scope="col">Source</th></tr>
+        </thead>
+        <tbody>
+          {% for row in model_rows %}
+          <tr>
+            <td class="pds-mono">{{ row.model_name }}</td>
+            <td class="pds-mono">{{ row.model_version }}</td>
+            <td class="pds-mono pds-small-value">{{ row.training_date }}</td>
+            <td class="pds-mono">{{ row.accuracy }}</td>
+            <td class="pds-mono">{{ row.precision }}</td>
+            <td class="pds-mono">{{ row.recall }}</td>
+            <td class="pds-mono">{{ row.f1_score }}</td>
+            <td class="pds-mono">{{ row.roc_auc }}</td>
+            <td class="pds-mono">{{ row.feature_count }}</td>
+            <td class="pds-mono pds-small-value">{{ row.metrics_source }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+</section>
+
+<section class="pds-section" aria-labelledby="adminMetricsHeading">
+  <div class="pds-section-head">
+    <h2 id="adminMetricsHeading">Measured artefact (runtime read)</h2>
+    <p>Source: <code>{{ metrics.source }}</code> &middot; generated {{ metrics.generated_at_utc }}.</p>
+  </div>
+  <div class="pds-table-wrap">
+    <table class="pds-table">
+      <thead><tr><th scope="col">Metric</th><th scope="col">Value</th><th scope="col">Source key</th></tr></thead>
+      <tbody>
+        {% for metric in metrics.rows %}
+        <tr><th scope="row">{{ metric.label }}</th><td class="pds-mono">{{ metric.value }}</td><td class="pds-mono pds-small-value">{{ metric.source }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <article class="pds-card pds-note-block">
+    <p class="pds-card-label">Caveats</p>
+    <ul class="pds-caveat-list">
+      {% for caveat in metrics.caveats %}<li>{{ caveat }}</li>{% endfor %}
+    </ul>
+  </article>
+</section>
+
+{% endblock %}

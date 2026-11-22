@@ -1,0 +1,255 @@
+/* =============================================================================
+   Stage 7 backend status / error stylesheet.
+
+   This is a small, self-contained stylesheet for the two developer-facing
+   backend pages and the secure error pages. It is intentionally NOT the final
+   product theme: Stage 9 delivers the full responsive SOC-style UI with
+   vendored Bootstrap 5, Chart.js, dark/light themes and the real templates.
+
+   No external fonts, images or imports: the Content-Security-Policy allows
+   only 'self', and the in-app preview has no network access.
+   ========================================================================== */
+
+:root {
+  --bg: #070d14;
+  --panel: #101a26;
+  --panel-2: #162333;
+  --line: #22344a;
+  --text: #e6eef7;
+  --muted: #8ea3ba;
+  --accent: #22d3ee;
+  --ok: #34d399;
+  --warn: #fbbf24;
+  --pending: #93a4b8;
+}
+
+* { box-sizing: border-box; }
+
+.backend-body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(1100px 540px at 15% -10%, rgba(34, 211, 238, 0.10), transparent 60%),
+    radial-gradient(900px 500px at 90% 0%, rgba(52, 211, 153, 0.07), transparent 60%),
+    var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.shell {
+  width: min(1120px, 100% - 2.5rem);
+  margin: 0 auto;
+  padding: 2rem 0 3rem;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.4rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand { display: flex; align-items: center; gap: 0.85rem; }
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  background: rgba(34, 211, 238, 0.08);
+}
+
+.brand-name { margin: 0; font-size: 1rem; font-weight: 650; }
+.brand-sub { margin: 0; font-size: 0.78rem; color: var(--muted); }
+
+.badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+.badge-ok {
+  color: var(--ok);
+  border: 1px solid rgba(52, 211, 153, 0.45);
+  background: rgba(52, 211, 153, 0.09);
+}
+
+.hero { padding: 2.6rem 0 1.8rem; }
+
+.eyebrow {
+  margin: 0 0 0.6rem;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+h1 { margin: 0 0 0.75rem; font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.15; }
+h2 { margin: 0 0 0.9rem; font-size: 1.05rem; letter-spacing: 0.02em; }
+
+.lead { max-width: 70ch; margin: 0; color: var(--muted); font-size: 0.98rem; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.5rem; }
+
+.button {
+  display: inline-block;
+  padding: 0.62rem 1.1rem;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: rgba(34, 211, 238, 0.12);
+  color: var(--accent);
+  font-size: 0.86rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.button:hover { background: rgba(34, 211, 238, 0.22); }
+.button-ghost { border-color: var(--line); background: transparent; color: var(--text); }
+.button-ghost:hover { background: var(--panel-2); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.panel {
+  padding: 1.15rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: linear-gradient(160deg, var(--panel), var(--panel-2));
+}
+
+.card-label {
+  margin: 0 0 0.55rem;
+  color: var(--muted);
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.card-value {
+  margin: 0;
+  font-size: 1.12rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.card-note { margin: 0.35rem 0 0; color: var(--muted); font-size: 0.78rem; }
+.status-ok { color: var(--ok); }
+.status-warn { color: var(--warn); }
+.status-pending { color: var(--pending); }
+
+.endpoints, .notice { margin-top: 1rem; }
+.muted { color: var(--muted); font-size: 0.82rem; }
+code { color: var(--accent); font-size: 0.85em; }
+
+table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; font-size: 0.84rem; }
+th, td { padding: 0.55rem 0.5rem; text-align: left; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
+td:first-child { color: var(--accent); font-weight: 650; width: 5.5rem; }
+td:nth-child(2) { font-family: Consolas, "Courier New", monospace; width: 15rem; }
+
+.notice p { margin: 0; color: var(--muted); font-size: 0.9rem; max-width: 85ch; }
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 1.6rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+/* --- Stage 8 account forms ----------------------------------------------- */
+.auth-panel {
+  width: min(520px, 100%);
+  margin: 2.4rem 0 1.2rem;
+}
+
+.auth-panel h1 { font-size: 1.7rem; }
+.auth-panel .lead { margin-bottom: 1.2rem; }
+
+.auth-panel form { display: flex; flex-direction: column; gap: 0.35rem; }
+.auth-panel label {
+  margin-top: 0.7rem;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.auth-panel input {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #0b1420;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.92rem;
+}
+
+.auth-panel input:focus {
+  outline: 2px solid rgba(34, 211, 238, 0.55);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.auth-panel form .button { margin-top: 1.2rem; cursor: pointer; font: inherit; }
+.auth-panel .muted { margin-top: 1rem; }
+.auth-panel a, .footer a { color: var(--accent); }
+
+.problems {
+  margin: 1rem 0;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: 8px;
+  background: rgba(251, 191, 36, 0.08);
+}
+
+.problems ul { margin: 0.4rem 0 0; padding-left: 1.2rem; color: var(--text); font-size: 0.86rem; }
+.problems .card-label { color: var(--warn); margin: 0; }
+.error-panel h1 { font-size: 2rem; }
+
+/* --- secure error pages -------------------------------------------------- */
+.error-panel {
+  width: min(560px, 100% - 2.5rem);
+  margin: 8vh auto;
+  text-align: left;
+}
+
+.error-panel h1 { font-size: 3.4rem; margin: 0.4rem 0 0; color: var(--warn); }
+.error-panel .code { margin: 0; font-family: Consolas, "Courier New", monospace; color: var(--accent); }
+.error-panel .message { margin: 1rem 0; font-size: 1rem; }
+.error-panel .button { margin-top: 0.8rem; }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px) {
+  .shell { width: min(100% - 1.5rem, 1120px); padding-top: 1.2rem; }
+  .grid { grid-template-columns: 1fr; }
+  .topbar { flex-direction: column; align-items: flex-start; }
+  td:nth-child(2) { width: auto; }
+  table, th, td { font-size: 0.78rem; }
+}

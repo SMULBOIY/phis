@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% block title %}Operational dashboard &middot; {{ app_name }}{% endblock %}
+{% block content %}
+
+<section class="pds-hero pds-hero-compact" aria-labelledby="dashHeading">
+  <p class="pds-eyebrow">STAGE {{ build_stage }} OF 14 &middot; LIVE AGGREGATES</p>
+  <h1 id="dashHeading">Operational <span>dashboard</span>.</h1>
+  <p class="pds-lead">
+    Every figure below is counted from <code>scan_history</code>,
+    <code>users</code> and <code>model_information</code> at request time, or
+    copied from the measured Stage 6 artefact. There is no demo data.
+  </p>
+  <div class="pds-actions">
+    <a class="pds-btn" href="{{ url_for('scanning.scan_form') }}">Scan a URL</a>
+    <a class="pds-btn pds-btn-ghost" href="{{ url_for('history.history') }}">Scan history</a>
+    <a class="pds-btn pds-btn-ghost" href="{{ url_for('history.export_csv') }}">Export CSV</a>
+    {% if show_admin %}<a class="pds-btn pds-btn-ghost" href="{{ url_for('admin.admin') }}">Admin console</a>{% endif %}
+  </div>
+</section>
+
+<section class="pds-section" aria-labelledby="kpiHeading">
+  <div class="pds-section-head">
+    <h2 id="kpiHeading">Current system state</h2>
+    <p>Source: <code>{{ overview.source }}</code>. Counts only — no submitted URL is shown here.</p>
+  </div>
+  <div class="pds-kpi-grid">
+    <article class="pds-card">
+      <p class="pds-card-label">Total scans</p>
+      <p class="pds-card-value pds-mono" id="statTotal">{{ overview.total_scans }}</p>
+      <p class="pds-card-note">All committed audit rows</p>
+    </article>
+    <article class="pds-card">
+      <p class="pds-card-label">Phishing alerts</p>
+      <p class="pds-card-value pds-mono">{{ overview.by_prediction.PHISHING }}</p>
+      <p class="pds-card-note">Exact PHISHING state</p>
+    </article>
+    <article class="pds-card">
+      <p class="pds-card-label">Abstentions</p>
+      <p class="pds-card-value pds-mono">{{ overview.by_prediction.SUSPICIOUS }}</p>
+      <p class="pds-card-note">SUSPICIOUS band results</p>
+    </article>
+    <article class="pds-card">
+      <p class="pds-card-label">SUSPICIOUS share</p>
+      <p class="pds-card-value pds-mono">{{ '%.1f'|format(overview.suspicious_share * 100) }}%</p>
+      <p class="pds-card-note">Computed from real rows in this database</p>
+    </article>
+    <article class="pds-card">
+      <p class="pds-card-label">Guest scans</p>
+      <p class="pds-card-value pds-mono">{{ overview.guest_scans }}</p>
+      <p class="pds-card-note">Rows with no linked account</p>
+    </article>
+    <article class="pds-card">
+      <p class="pds-card-label">Linked scans</p>
+      <p class="pds-card-value pds-mono">{{ overview.linked_scans }}</p>
+      <p class="pds-card-note">Rows tied to a registered user</p>
+    </article>
+    <article class="pds-card">
+      <p class="pds-card-label">First scan (UTC)</p>
+      <p class="pds-card-value pds-mono pds-small-value">{{ overview.first_scan_utc or 'none yet' }}</p>
+      <p class="pds-card-note">Oldest committed row</p>
+    </article>
+    <article class="pds-card">
+      <p class="pds-card-label">Last scan (UTC)</p>
+      <p class="pds-card-value pds-mono pds-small-value">{{ overview.last_scan_utc or 'none yet' }}</p>
+      <p class="pds-card-note">Most recent committed row</p>
+    </article>
+  </div>
+</section>
+
+<section class="pds-section" aria-labelledby="chartsHeading">
+  <div class="pds-section-head">
+    <h2 id="chartsHeading">Real visualisations</h2>
+    <p>
+      Chart.js renders the same <code>data-chart</code> payloads introduced in
+      Stage 9. Values are live database counts, read at request time.
+    </p>
+  </div>
+  <div class="pds-chart-grid">
+    <article class="pds-card">
+      <p class="pds-card-label">Classification distribution</p>
+      <div class="pds-chart-box" data-chart-type="bar"
+           data-chart='{{ state_chart|tojson }}'
+           role="img" aria-label="Bar chart of scan counts by classification">
+        <canvas id="stateChart" data-chart-target="states"></canvas>
+        <p class="pds-chart-note" data-chart-fallback>
+          State counts: {% for name in state_chart.labels %}{{ name }} {{ state_chart.values[loop.index0] }}{% if not loop.last %} &middot; {% endif %}{% endfor %}
+        </p>
+      </div>
+      <p class="pds-card-note">Source: <code>{{ state_chart.source }}</code></p>
+    </article>
+    <article class="pds-card">
+      <p class="pds-card-label">Risk-level mix</p>
+      <div class="pds-chart-box" data-chart-type="doughnut"
+           data-chart='{{ risk_chart|tojson }}'
+           role="img" aria-label="Doughnut chart of scan counts by risk level">
+        <canvas id="riskChart" data-chart-target="risk"></canvas>
+        <p class="pds-chart-note" data-chart-fallback>
+          Risk counts: {% for name in risk_chart.labels %}{{ name }} {{ risk_chart.values[loop.index0] }}{% if not loop.last %} &middot; {% endif %}{% endfor %}
+        </p>
+      </div>
+      <p class="pds-card-note">Source: <code>{{ risk_chart.source }}</code></p>
+    </article>
+    <article class="pds-card pds-chart-wide">
+      <p class="pds-card-label">Scan volume &middot; last 7 UTC days</p>
+      <div class="pds-chart-box" data-chart-type="bar"
+           data-chart='{{ volume_chart|tojson }}'
+           role="img" aria-label="Bar chart of daily scan counts">
+        <canvas id="volumeChart" data-chart-target="volume"></canvas>
+        <p class="pds-chart-note" data-chart-fallback>
+          Daily counts: {% for day in volume_chart.labels %}{{ day }} {{ volume_chart.values[loop.index0] }}{% if not loop.last %} &middot; {% endif %}{% endfor %}
+        </p>
+      </div>
+      <p class="pds-card-note">Missing days are honest zeros. Source: <code>{{ volume_chart.source }}</code></p>
+    </article>
+  </div>
+</section>
+
+<section class="pds-section" aria-labelledby="metricsHeading">
+  <div class="pds-section-head">
+    <h2 id="metricsHeading">Measured model performance</h2>
+    <p>
+      Read at runtime from <code>{{ metrics.source }}</code>. These are
+      published held-out test results, not measurements of this dashboard's
+      traffic.
+    </p>
+  </div>
+  <div class="pds-table-wrap">
+    <table class="pds-table">
+      <thead><tr><th scope="col">Metric</th><th scope="col">Measured value</th><th scope="col">Runtime source</th></tr></thead>
+      <tbody>
+        {% for metric in metrics.rows %}
+        <tr>
+          <th scope="row">{{ metric.label }}</th>
+          <td class="pds-mono">{{ metric.value }}</td>
+          <td class="pds-mono pds-small-value">{{ metric.source }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pds-meta-grid">
+    <article class="pds-card">
+      <p class="pds-card-label">Held-out confusion matrix</p>
+      <div class="pds-table-wrap">
+        <table class="pds-table">
+          <thead><tr><th scope="col"></th><th scope="col">Predicted legitimate</th><th scope="col">Predicted phishing</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Actual legitimate</th><td class="pds-mono">{{ metrics.confusion_matrix[0][0] }}</td><td class="pds-mono">{{ metrics.confusion_matrix[0][1] }}</td></tr>
+            <tr><th scope="row">Actual phishing</th><td class="pds-mono">{{ metrics.confusion_matrix[1][0] }}</td><td class="pds-mono">{{ metrics.confusion_matrix[1][1] }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="pds-card-note">Decision boundary {{ metrics.decision_boundary }} &middot; measured once on the test split.</p>
+    </article>
+    <article class="pds-card">
+      <p class="pds-card-label">Calibrated abstention band</p>
+      <p class="pds-card-value pds-mono">{{ metrics.band.low }} / {{ metrics.band.high }}</p>
+      <p class="pds-card-note">
+        Source: <code>{{ metrics.band_source }}</code><br>
+        Abstention rate {{ metrics.band.abstention_rate }} over
+        {{ metrics.band.decisive_count }} decisive and
+        {{ metrics.band.abstained_count }} abstained test rows.
+      </p>
+    </article>
+  </div>
+
+  <article class="pds-card pds-note-block">
+    <p class="pds-card-label">Read these caveats with every figure</p>
+    <ul class="pds-caveat-list">
+      {% for caveat in metrics.caveats %}<li>{{ caveat }}</li>{% endfor %}
+    </ul>
+  </article>
+</section>
+
+<section class="pds-section" aria-labelledby="dashSafetyHeading">
+  <div class="pds-banner">
+    <span class="pds-pill pds-pill-ok">SAFETY NOTICE</span>
+    <div>
+      <strong id="dashSafetyHeading">HTTPS alone does not mean a website is legitimate.</strong>
+      <p>
+        The dashboard reports history, not safety. A low model score is an
+        uncalibrated estimate over 15 lexical URL characteristics, never a
+        guarantee. The backend never visits a submitted URL.
+      </p>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Create account &middot; {{ app_name }}{% endblock %}
+{% block content %}
+
+<div class="pds-auth-shell">
+  <section class="pds-auth-card" aria-labelledby="registerHeading">
+    <p class="pds-eyebrow">CREATE AN ACCOUNT &middot; LOCAL IDENTITY</p>
+    <h1 id="registerHeading">Create your account</h1>
+    <p class="pds-lead">
+      Register a local account for scan history and the dashboard. Guest
+      scanning remains available without one. Self-registration always
+      creates an ordinary user; administrator accounts are created only by
+      the command-line bootstrap script.
+    </p>
+
+    {% if problems %}
+      <ul class="pds-problems" role="alert">
+        {% for item in problems %}<li>{{ item }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+
+    <form method="post" action="{{ action }}" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ token }}">
+      <div class="pds-field">
+        <label class="pds-label" for="username">Username</label>
+        <input class="pds-input" id="username" name="username" type="text"
+               maxlength="32" autocomplete="username" required
+               placeholder="3-32 letters, digits, dot, dash or underscore">
+        <span class="pds-help">Letters, digits, dot, dash and underscore only.</span>
+      </div>
+      <div class="pds-field">
+        <label class="pds-label" for="email">Email</label>
+        <input class="pds-input" id="email" name="email" type="email"
+               maxlength="254" autocomplete="email" required
+               placeholder="name@example.com">
+      </div>
+      <div class="pds-field">
+        <label class="pds-label" for="password">Password</label>
+        <input class="pds-input" id="password" name="password" type="password"
+               maxlength="128" autocomplete="new-password" required
+               placeholder="At least 12 characters">
+        <span class="pds-help">At least 12 characters with an uppercase letter, a lowercase letter, a digit and a symbol.</span>
+      </div>
+      <div class="pds-field">
+        <label class="pds-label" for="confirm_password">Confirm password</label>
+        <input class="pds-input" id="confirm_password" name="confirm_password"
+               type="password" maxlength="128" autocomplete="new-password" required
+               placeholder="Repeat your password">
+      </div>
+      <button class="pds-btn pds-auth-submit" type="submit">CREATE ACCOUNT</button>
+    </form>
+
+    <p class="pds-auth-switch">
+      {{ switch_text }} <a href="{{ switch_url }}">{{ switch_label }}</a>
+    </p>
+    <p class="pds-security-note">
+      The password is never logged, echoed or stored in plaintext — only a
+      salted scrypt hash is written to SQLite. Submitting JSON to this same
+      URL returns JSON instead of HTML.
+    </p>
+  </section>
+</div>
+
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}Scan history &middot; {{ app_name }}{% endblock %}
+{% block content %}
+
+<section class="pds-hero pds-hero-compact" aria-labelledby="historyHeading">
+  <p class="pds-eyebrow">STAGE {{ build_stage }} OF 14 &middot; AUDIT TRAIL</p>
+  <h1 id="historyHeading">Scan <span>history</span>.</h1>
+  <p class="pds-lead">
+    Every row here is a real committed scan with its classification, risk,
+    labelled model score and UTC timestamp. Source:
+    <code>{{ history.source }}</code>.
+  </p>
+  <div class="pds-actions">
+    <a class="pds-btn" href="{{ url_for('scanning.scan_form') }}">Scan another URL</a>
+    <a class="pds-btn pds-btn-ghost" href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+    <a class="pds-btn pds-btn-ghost" href="{{ url_for('history.export_csv', prediction=filters.prediction, risk=filters.risk, q=filters.q) }}">Download CSV</a>
+  </div>
+</section>
+
+{% if history.scope == 'session' %}
+  <div class="pds-banner" role="note">
+    <span class="pds-pill">GUEST SESSION</span>
+    <div>
+      <strong>History is limited to this browser session.</strong>
+      <p>
+        Guest scans are not linked to an account, so only the most recent scan
+        ids stored in your signed session are listed.
+        <a href="{{ url_for('auth.login') }}">Sign in</a> or
+        <a href="{{ url_for('auth.register') }}">create an account</a> to keep
+        a persistent history. Other visitors' URLs are never shown.
+      </p>
+    </div>
+  </div>
+{% endif %}
+
+<section class="pds-section" aria-labelledby="filterHeading">
+  <div class="pds-section-head">
+    <h2 id="filterHeading">Filter results</h2>
+    <p>Read-only GET parameters, validated and bound through the ORM.</p>
+  </div>
+  <form class="pds-filter-bar" method="get" action="{{ url_for('history.history') }}">
+    <div class="pds-filter-field">
+      <label class="pds-field-label" for="filterPrediction">Classification</label>
+      <select class="pds-input" id="filterPrediction" name="prediction">
+        <option value=""{% if not filters.prediction %} selected{% endif %}>All states</option>
+        <option value="LEGITIMATE"{% if filters.prediction == 'LEGITIMATE' %} selected{% endif %}>LEGITIMATE</option>
+        <option value="SUSPICIOUS"{% if filters.prediction == 'SUSPICIOUS' %} selected{% endif %}>SUSPICIOUS</option>
+        <option value="PHISHING"{% if filters.prediction == 'PHISHING' %} selected{% endif %}>PHISHING</option>
+      </select>
+    </div>
+    <div class="pds-filter-field">
+      <label class="pds-field-label" for="filterRisk">Risk level</label>
+      <select class="pds-input" id="filterRisk" name="risk">
+        <option value=""{% if not filters.risk %} selected{% endif %}>All levels</option>
+        <option value="LOW"{% if filters.risk == 'LOW' %} selected{% endif %}>LOW</option>
+        <option value="MEDIUM"{% if filters.risk == 'MEDIUM' %} selected{% endif %}>MEDIUM</option>
+        <option value="HIGH"{% if filters.risk == 'HIGH' %} selected{% endif %}>HIGH</option>
+      </select>
+    </div>
+    <div class="pds-filter-field pds-filter-grow">
+      <label class="pds-field-label" for="filterQuery">URL contains</label>
+      <input class="pds-input" type="search" id="filterQuery" name="q"
+             value="{{ filters.q }}" maxlength="120" placeholder="example.com">
+    </div>
+    <div class="pds-filter-field">
+      <label class="pds-field-label" for="filterPerPage">Rows per page</label>
+      <select class="pds-input" id="filterPerPage" name="per_page">
+        {% for size in (10, 20, 50, 100) %}
+        <option value="{{ size }}"{% if filters.per_page == size %} selected{% endif %}>{{ size }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="pds-filter-field pds-filter-actions">
+      <button class="pds-btn pds-btn-primary" type="submit">Apply filters</button>
+      <a class="pds-btn pds-btn-ghost" href="{{ url_for('history.history') }}">Clear</a>
+    </div>
+  </form>
+</section>
+
+<section class="pds-section" aria-labelledby="resultsHeading">
+  <div class="pds-section-head">
+    <h2 id="resultsHeading">Results</h2>
+    <p>
+      {{ history.total }} matching scan{{ '' if history.total == 1 else 's' }}
+      &middot; page {{ history.page }} of {{ history.pages }}
+      &middot; {{ history.per_page }} per page.
+    </p>
+  </div>
+
+  {% if not history.rows %}
+    <article class="pds-card pds-empty-state">
+      <p class="pds-card-label">No matching scans</p>
+      <p>
+        No audit rows match these filters. This is a real empty result, not a
+        placeholder: try clearing a filter or
+        <a href="{{ url_for('scanning.scan_form') }}">run a new scan</a>.
+      </p>
+    </article>
+  {% else %}
+    <div class="pds-table-wrap">
+      <table class="pds-table pds-history-table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Submitted URL</th>
+            <th scope="col">Classification</th>
+            <th scope="col">Risk</th>
+            <th scope="col">Model score</th>
+            <th scope="col">Date (UTC)</th>
+            <th scope="col">Report</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in history.rows %}
+          <tr>
+            <td class="pds-mono">{{ item.id }}</td>
+            <td class="pds-url-cell" title="{{ item.normalised_url }}">{{ item.url }}</td>
+            <td><span class="pds-badge pds-badge-{{ item.prediction|lower }}">{{ item.prediction }}</span></td>
+            <td class="pds-mono">{{ item.risk_level }}</td>
+            <td class="pds-mono">{{ '%.6f'|format(item.model_score) }}</td>
+            <td class="pds-mono pds-small-value">{{ item.scan_date }}</td>
+            <td><a class="pds-table-link" href="{{ item.report_url }}">Open report</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="pds-card-note pds-note-block">
+      The model score is an uncalibrated estimate over 15 lexical URL
+      characteristics, not a guaranteed probability of maliciousness.
+      HTTPS alone does not mean a website is legitimate.
+    </p>
+
+    {% if history.pages > 1 %}
+    <nav class="pds-pagination" aria-label="History pages">
+      {% if history.page > 1 %}
+      <a class="pds-btn pds-btn-ghost" href="{{ url_for('history.history', page=history.page - 1, per_page=filters.per_page, prediction=filters.prediction, risk=filters.risk, q=filters.q) }}">Previous</a>
+      {% endif %}
+      <span class="pds-pagination-status">Page {{ history.page }} of {{ history.pages }}</span>
+      {% if history.page < history.pages %}
+      <a class="pds-btn pds-btn-ghost" href="{{ url_for('history.history', page=history.page + 1, per_page=filters.per_page, prediction=filters.prediction, risk=filters.risk, q=filters.q) }}">Next</a>
+      {% endif %}
+    </nav>
+    {% endif %}
+  {% endif %}
+</section>
+
+{% endblock %}

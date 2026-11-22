@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 1526" width="1240" height="1526" role="img" aria-labelledby="t d">
+  <title id="t">UML activity diagram — the scan pipeline</title>
+  <desc id="d">One request flows from receipt through CSRF validation, URL validation, feature extraction, model scoring, a three-state decision with measured thresholds, an explanation step, a single committed database row, and rendering. Every failure branch terminates in an explicit error response and no partial row is written.</desc>
+  <rect width="1240" height="1526" fill="#ffffff"/>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#334155"/></marker>
+    <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b91c1c"/></marker>
+  </defs>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<text x="30" y="32" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="#0f172a" text-anchor="start">Detection pipeline — one request, one transaction</text>
+  <circle cx="560" cy="72" r="13" fill="#0f172a"/>
+  <line x1="560" y1="85" x2="560" y2="108" stroke="#334155" stroke-width="1.9" marker-end="url(#a)"/>
+  <rect x="320" y="108" width="480" height="56" rx="8" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.8"/>
+<text x="560.0" y="140.5" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#0f172a" text-anchor="middle">Receive POST /scan (HTML) or POST /api/v1/scan (JSON)</text>
+  <line x1="560" y1="164" x2="560" y2="182" stroke="#334155" stroke-width="1.9" marker-end="url(#a)"/>
+  <polygon points="560,182 710,234 560,286 410,234" fill="#f8fafc" stroke="#1d4ed8" stroke-width="1.8"/>
+<text x="560" y="238" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#0f172a" text-anchor="middle">CSRF token valid?</text>
+  <path d="M710 234 H870" fill="none" stroke="#b91c1c" stroke-width="1.9" stroke-dasharray="7 5" marker-end="url(#r)"/>
+<text x="722" y="222" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#b91c1c" text-anchor="start">no</text>
+  <rect x="878" y="206.0" width="302" height="56" rx="8" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.8"/>
+<text x="1029.0" y="230" font-family="Consolas, 'DejaVu Sans Mono', monospace" font-size="12" font-weight="bold" fill="#b91c1c" text-anchor="middle">400 CSRF_FAILED</text>
+<text x="1029.0" y="249" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#7f1d1d" text-anchor="middle">rejected by the framework, no handler run</text>
+  <line x1="560" y1="286" x2="560" y2="310" stroke="#334155" stroke-width="1.9" marker-end="url(#a)"/>
+<text x="574" y="302" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#475569" text-anchor="start">yes</text>
+  <rect x="320" y="310" width="480" height="72" rx="8" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.8"/>
+<text x="560.0" y="341.0" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#0f172a" text-anchor="middle">Validate at the trust boundary</text>
+<text x="560.0" y="360.0" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#475569" text-anchor="middle">normalise with ml/url_utils · ≤ 2048 chars · http(s) only · no fetch</text>
+  <path d="M800 346 H870" fill="none" stroke="#b91c1c" stroke-width="1.9" stroke-dasharray="7 5" marker-end="url(#r)"/>
+<text x="810" y="336" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#b91c1c" text-anchor="start">unsafe input</text>
+  <rect x="878" y="318.0" width="302" height="56" rx="8" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.8"/>
+<text x="1029.0" y="342" font-family="Consolas, 'DejaVu Sans Mono', monospace" font-size="12" font-weight="bold" fill="#b91c1c" text-anchor="middle">400 INVALID_URL</text>
+<text x="1029.0" y="361" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#7f1d1d" text-anchor="middle">generic message, input never echoed</text>
+  <line x1="560" y1="382" x2="560" y2="400" stroke="#334155" stroke-width="1.9" marker-end="url(#a)"/>
+  <polygon points="560,400 710,452 560,504 410,452" fill="#f8fafc" stroke="#1d4ed8" stroke-width="1.8"/>
+<text x="560" y="447" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#0f172a" text-anchor="middle">Hash-verified model</text>
+<text x="560" y="465" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#0f172a" text-anchor="middle">bundle available?</text>
+  <path d="M710 452 H870" fill="none" stroke="#b91c1c" stroke-width="1.9" stroke-dasharray="7 5" marker-end="url(#r)"/>
+<text x="722" y="442" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#b91c1c" text-anchor="start">no — bundle not loaded</text>
+  <rect x="878" y="424.0" width="302" height="56" rx="8" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.8"/>
+<text x="1029.0" y="448" font-family="Consolas, 'DejaVu Sans Mono', monospace" font-size="12" font-weight="bold" fill="#b91c1c" text-anchor="middle">503 MODEL_UNAVAILABLE</text>
+<text x="1029.0" y="467" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#7f1d1d" text-anchor="middle">bundle missing, corrupt or hash mismatch</text>
+  <line x1="560" y1="504" x2="560" y2="528" stroke="#334155" stroke-width="1.9" marker-end="url(#a)"/>
+<text x="574" y="520" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#475569" text-anchor="start">yes</text>
+  <rect x="320" y="528" width="480" height="56" rx="8" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.8"/>
+<text x="560.0" y="560.5" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#0f172a" text-anchor="middle">Extract the shared 15 lexical features</text>
+  <line x1="560" y1="584" x2="560" y2="602" stroke="#334155" stroke-width="1.9" marker-end="url(#a)"/>
+  <rect x="320" y="602" width="480" height="72" rx="8" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.8"/>
+<text x="560.0" y="633.0" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#0f172a" text-anchor="middle">Score with the loaded pipeline</text>
+<text x="560.0" y="652.0" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#475569" text-anchor="middle">predict_proba(class 1) → p ∈ [0, 1]</text>
+  <line x1="560" y1="674" x2="560" y2="692" stroke="#334155" stroke-width="1.9" marker-end="url(#a)"/>
+  <polygon points="560,694 745,752 560,810 375,752" fill="#f8fafc" stroke="#1d4ed8" stroke-width="1.8"/>
+<text x="560" y="747" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#0f172a" text-anchor="middle">Apply the measured band</text>
+<text x="560" y="765" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#0f172a" text-anchor="middle">T_low = 0.05 · T_high = 0.95</text>
+  <rect x="182" y="858" width="236" height="76" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1.8"/>
+<text x="300" y="882" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#047857" text-anchor="middle">LEGITIMATE</text>
+<text x="300" y="900" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="middle">p ≤ 0.05</text>
+<text x="300" y="917" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#475569" text-anchor="middle">risk LOW</text>
+  <line x1="496" y1="772" x2="300" y2="854" stroke="#334155" stroke-width="1.9" marker-end="url(#a)"/>
+  <rect x="442" y="858" width="236" height="76" rx="8" fill="#fff7ed" stroke="#c2410c" stroke-width="1.8"/>
+<text x="560" y="882" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#c2410c" text-anchor="middle">SUSPICIOUS</text>
+<text x="560" y="900" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="middle">0.05 &lt; p &lt; 0.95</text>
+<text x="560" y="917" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#475569" text-anchor="middle">abstention · uncertain = True</text>
+  <line x1="560" y1="810" x2="560" y2="854" stroke="#334155" stroke-width="1.9" marker-end="url(#a)"/>
+  <rect x="702" y="858" width="236" height="76" rx="8" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.8"/>
+<text x="820" y="882" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#b91c1c" text-anchor="middle">PHISHING</text>
+<text x="820" y="900" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#0f172a" text-anchor="middle">p ≥ 0.95</text>
+<text x="820" y="917" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#475569" text-anchor="middle">risk HIGH</text>
+  <line x1="624" y1="772" x2="820" y2="854" stroke="#334155" stroke-width="1.9" marker-end="url(#a)"/>
+  <path d="M300 934 V960 L560 960 V974" fill="none" stroke="#334155" stroke-width="1.8"/>
+  <path d="M560 934 V960 L560 960 V974" fill="none" stroke="#334155" stroke-width="1.8"/>
+  <path d="M820 934 V960 L560 960 V974" fill="none" stroke="#334155" stroke-width="1.8"/>
+  <line x1="560" y1="976" x2="560" y2="1010" stroke="#334155" stroke-width="1.9" marker-end="url(#a)"/>
+<text x="464" y="986" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#475569" text-anchor="middle">exactly one state, never two</text>
+  <rect x="320" y="1010" width="480" height="72" rx="8" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.8"/>
+<text x="560.0" y="1041.0" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#0f172a" text-anchor="middle">Build the explanation</text>
+<text x="560.0" y="1060.0" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#475569" text-anchor="middle">observed features · measured importance · explicit caveats</text>
+  <line x1="560" y1="1082" x2="560" y2="1100" stroke="#334155" stroke-width="1.9" marker-end="url(#a)"/>
+  <rect x="320" y="1100" width="480" height="56" rx="8" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.8"/>
+<text x="560.0" y="1132.5" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#0f172a" text-anchor="middle">INSERT one ScanHistory row + COMMIT</text>
+  <path d="M800 1128 H870" fill="none" stroke="#b91c1c" stroke-width="1.9" stroke-dasharray="7 5" marker-end="url(#r)"/>
+<text x="810" y="1118" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#b91c1c" text-anchor="start">commit fails</text>
+  <rect x="878" y="1100.0" width="302" height="56" rx="8" fill="#fef2f2" stroke="#b91c1c" stroke-width="1.8"/>
+<text x="1029.0" y="1124" font-family="Consolas, 'DejaVu Sans Mono', monospace" font-size="12" font-weight="bold" fill="#b91c1c" text-anchor="middle">503 DATABASE_UNAVAILABLE</text>
+<text x="1029.0" y="1143" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#7f1d1d" text-anchor="middle">rollback — no partial row survives</text>
+  <line x1="560" y1="1156" x2="560" y2="1174" stroke="#334155" stroke-width="1.9" marker-end="url(#a)"/>
+  <rect x="320" y="1174" width="480" height="56" rx="8" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.8"/>
+<text x="560.0" y="1206.5" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#0f172a" text-anchor="middle">Render the result page — or the JSON body</text>
+  <line x1="560" y1="1230" x2="560" y2="1248" stroke="#334155" stroke-width="1.9" marker-end="url(#a)"/>
+  <rect x="320" y="1248" width="480" height="56" rx="8" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.8"/>
+<text x="560.0" y="1280.5" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#0f172a" text-anchor="middle">Return HTTP 200 with the stored result</text>
+  <line x1="560" y1="1304" x2="560" y2="1324" stroke="#334155" stroke-width="1.9" marker-end="url(#a)"/>
+  <circle cx="560" cy="1338" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="2.4"/>
+  <circle cx="560" cy="1338" r="7" fill="#0f172a"/>
+  <rect x="878" y="1296" width="302" height="196" rx="8" fill="#f8fafc" stroke="#475569" stroke-width="1.6"/>
+<text x="894" y="1320" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="start">Rules encoded in this flow</text>
+<text x="894" y="1344" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10.5" fill="#334155" text-anchor="start">• Three states, one model score, two</text>
+<text x="894" y="1360" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10.5" fill="#334155" text-anchor="start">  thresholds measured on validation data.</text>
+<text x="894" y="1376" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10.5" fill="#334155" text-anchor="start">  No rule overrides the model.</text>
+<text x="894" y="1392" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10.5" fill="#334155" text-anchor="start">• SUSPICIOUS is an abstention, not a</text>
+<text x="894" y="1408" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10.5" fill="#334155" text-anchor="start">  third predicted class.</text>
+<text x="894" y="1424" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10.5" fill="#334155" text-anchor="start">• Nothing is rendered before the INSERT</text>
+<text x="894" y="1440" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10.5" fill="#334155" text-anchor="start">  commits, so a shown result always</text>
+<text x="894" y="1456" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10.5" fill="#334155" text-anchor="start">  exists in the audit trail.</text>
+<text x="894" y="1472" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10.5" fill="#334155" text-anchor="start">• No step fetches the URL.</text>
+  </g>
+</svg>

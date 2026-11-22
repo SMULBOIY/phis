@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 1010" width="1240" height="1010" role="img" aria-labelledby="title desc">
+  <title id="title">UML use case diagram — Intelligent Phishing Website Detection System</title>
+  <desc id="desc">Three human actors (Guest, Registered user, Administrator) and one system actor (API client) are associated with seven use cases inside the system boundary, plus an administrator-only note and the REST contract.</desc>
+  <rect width="1240" height="1010" fill="#ffffff"/>
+  <rect x="310" y="52" width="590" height="722" rx="14" fill="#f8fafc" stroke="#334155" stroke-width="2"/>
+<text x="605.0" y="84" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#0f172a" text-anchor="middle">Intelligent Phishing Website Detection System</text>
+<text x="605.0" y="104" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#64748b" text-anchor="middle">system boundary</text>
+  <g stroke="#0f172a" stroke-width="2.4" fill="none">
+    <circle cx="84" cy="90" r="16"/>
+    <line x1="84" y1="106" x2="84" y2="144"/>
+    <line x1="56" y1="122" x2="112" y2="122"/>
+    <line x1="84" y1="144" x2="62" y2="180"/>
+    <line x1="84" y1="144" x2="106" y2="180"/>
+  </g>
+<text x="84" y="206" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Guest</text>
+  <g stroke="#0f172a" stroke-width="2.4" fill="none">
+    <circle cx="84" cy="340" r="16"/>
+    <line x1="84" y1="356" x2="84" y2="394"/>
+    <line x1="56" y1="372" x2="112" y2="372"/>
+    <line x1="84" y1="394" x2="62" y2="430"/>
+    <line x1="84" y1="394" x2="106" y2="430"/>
+  </g>
+<text x="84" y="456" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Registered</text>
+<text x="84" y="473" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">user</text>
+  <g stroke="#0f172a" stroke-width="2.4" fill="none">
+    <circle cx="84" cy="590" r="16"/>
+    <line x1="84" y1="606" x2="84" y2="644"/>
+    <line x1="56" y1="622" x2="112" y2="622"/>
+    <line x1="84" y1="644" x2="62" y2="680"/>
+    <line x1="84" y1="644" x2="106" y2="680"/>
+  </g>
+<text x="84" y="706" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Administrator</text>
+  <g stroke="#1d4ed8" stroke-width="2.4" fill="none">
+    <rect x="1108" y="274" width="72" height="50" rx="6"/>
+    <path d="M1120 288 h18 M1120 297 h38 M1120 306 h28"/>
+  </g>
+<text x="1144" y="256" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1d4ed8" text-anchor="middle">API client</text>
+<text x="1144" y="344" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#475569" text-anchor="middle">(curl / script)</text>
+  <ellipse cx="605.0" cy="148" rx="146" ry="30" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="605.0" y="153" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#0f172a" text-anchor="middle">Scan a URL (public)</text>
+  <ellipse cx="605.0" cy="230" rx="146" ry="30" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="605.0" y="235" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#0f172a" text-anchor="middle">View result &amp; explanation</text>
+  <ellipse cx="605.0" cy="312" rx="146" ry="30" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="605.0" y="317" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#0f172a" text-anchor="middle">Sign in / register</text>
+  <ellipse cx="605.0" cy="394" rx="146" ry="30" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="605.0" y="399" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#0f172a" text-anchor="middle">Open printable report</text>
+  <ellipse cx="605.0" cy="476" rx="146" ry="30" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="605.0" y="481" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#0f172a" text-anchor="middle">View public dashboard</text>
+  <ellipse cx="605.0" cy="558" rx="146" ry="30" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="605.0" y="563" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#0f172a" text-anchor="middle">Browse + filter own history</text>
+  <ellipse cx="605.0" cy="640" rx="146" ry="30" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="605.0" y="645" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#0f172a" text-anchor="middle">Export own history (CSV)</text>
+  <g stroke="#94a3b8" stroke-width="1.4" fill="none">
+    <line x1="114" y1="130" x2="461" y2="143"/>
+    <line x1="114" y1="130" x2="501" y2="209"/>
+    <line x1="114" y1="130" x2="534" y2="286"/>
+    <line x1="114" y1="130" x2="553" y2="366"/>
+    <line x1="114" y1="130" x2="564" y2="447"/>
+    <line x1="114" y1="380" x2="547" y2="176"/>
+    <line x1="114" y1="380" x2="524" y2="255"/>
+    <line x1="114" y1="380" x2="461" y2="390"/>
+    <line x1="114" y1="380" x2="499" y2="455"/>
+    <line x1="114" y1="380" x2="533" y2="532"/>
+    <line x1="114" y1="380" x2="552" y2="612"/>
+    <line x1="114" y1="630" x2="575" y2="177"/>
+    <line x1="114" y1="630" x2="569" y2="259"/>
+    <line x1="114" y1="630" x2="525" y2="501"/>
+    <line x1="1104" y1="300" x2="687" y2="173"/>
+    <line x1="1104" y1="300" x2="726" y2="247"/>
+  </g>
+  <rect x="30" y="812" width="380" height="128" rx="8" fill="#fff7ed" stroke="#c2410c" stroke-width="1.6"/>
+<text x="46" y="836" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#7c2d12" text-anchor="start">Administrator only</text>
+<text x="46" y="860" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#7c2d12" text-anchor="start">• Admin console: accounts and the</text>
+<text x="46" y="879" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#7c2d12" text-anchor="start">  measured-model audit row</text>
+<text x="46" y="898" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#7c2d12" text-anchor="start">• Export ALL scans (CSV)</text>
+<text x="46" y="917" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#7c2d12" text-anchor="start">401 anonymous · 403 non-admin</text>
+  <rect x="432" y="812" width="380" height="128" rx="8" fill="#ecfdf5" stroke="#047857" stroke-width="1.6"/>
+<text x="448" y="836" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#065f46" text-anchor="start">REST contract (/api/v1)</text>
+<text x="448" y="860" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#334155" text-anchor="start">POST /scan      GET /scans</text>
+<text x="448" y="879" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#334155" text-anchor="start">GET /model/info</text>
+<text x="448" y="898" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#334155" text-anchor="start">same detection pipeline, JSON only</text>
+<text x="448" y="917" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#334155" text-anchor="start">same CSRF + session requirements</text>
+  <rect x="834" y="812" width="380" height="128" rx="8" fill="#f8fafc" stroke="#334155" stroke-width="1.6"/>
+<text x="850" y="836" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="start">Recorded as an extension</text>
+<text x="850" y="860" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#334155" text-anchor="start">The API client is a system actor: the JSON</text>
+<text x="850" y="879" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#334155" text-anchor="start">endpoints let an automated grader or script</text>
+<text x="850" y="898" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#334155" text-anchor="start">exercise the same detection path as a</text>
+<text x="850" y="917" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#334155" text-anchor="start">browser. No separate inference route exists.</text>
+  <g font-size="11" fill="#475569">
+  <line x1="310" y1="740" x2="344" y2="760" stroke="#94a3b8" stroke-width="1.4"/>
+<text x="364" y="744" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#475569" text-anchor="start">association</text>
+  <ellipse cx="472" cy="740" rx="16" ry="10" fill="#eaf1ff" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="494" y="744" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#475569" text-anchor="start">use case</text>
+  <rect x="578" y="732" width="16" height="16" fill="#fff7ed" stroke="#c2410c" stroke-width="1.4"/>
+<text x="602" y="744" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#475569" text-anchor="start">role-restricted behaviour</text>
+  </g>
+</svg>
